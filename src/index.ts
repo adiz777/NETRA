@@ -1,7 +1,7 @@
 /**
  * Indian Fake Data Generator — Main Entry Point
  *
- * @author Abhay Mourya <https://github.com/abhay557>
+ *  *@author Adi Zala <https://github.com/adiz777> 
  * @license MIT
  *
  * A generator for realistic Indian demographic data based on Census 2011 statistics.
@@ -122,3 +122,103 @@ export type { StripPIIOptions } from './utils/privacy.js';
 // note for someone who is reading this code
 // yee sab data probablity hai vho confidentail hai iske liye github par public nahi kar sakta
 // kyu ki research paper bane ka hai iske liye public nahi kar sakta
+
+
+
+// ── NETRA Intelligence Platform ─────────────────────────────
+
+export {
+  generateIdentity,
+  getIdentity,
+} from './netra/identity.js';
+
+export type {
+  NetraIdentity,
+  NetraIdentityOptions,
+} from './netra/identity.js';
+
+export {
+  generateGovernmentIds,
+} from './netra/governmentIds.js';
+
+export type {
+  NetraGovernmentIds,
+} from './netra/governmentIds.js';
+
+export {
+  createDossier,
+} from './netra/dossier.js';
+
+export type {
+  NetraDossier,
+} from './netra/dossier.js';
+
+export {
+  createTimeline,
+} from './netra/timeline.js';
+
+export type {
+  NetraTimeline,
+  NetraTimelineEvent,
+} from './netra/timeline.js';
+
+export {
+  createNetwork,
+} from './netra/network.js';
+
+export type {
+  NetraNetwork,
+  NetraNetworkNode,
+  NetraNetworkEdge,
+  NetraNodeType,
+  NetraRelationshipType,
+} from './netra/network.js';
+
+export {
+  searchIdentity,
+  getIdentityById,
+} from './netra/search.js';
+
+export type {
+  NetraSearchQuery,
+  NetraSearchResult,
+} from './netra/search.js';
+
+export {
+  createCase,
+  addEvidence,
+  addNote,
+  assignSubject,
+} from './netra/case.js';
+
+export type {
+  NetraCase,
+  NetraCaseStatus,
+  NetraEvidence,
+} from './netra/case.js';
+
+export {
+  createInvestigation,
+  addInvestigationSubject,
+} from './netra/investigation.js';
+
+export type {
+  NetraInvestigation,
+} from './netra/investigation.js';
+
+export {
+  createExposure,
+} from './netra/exposure.js';
+
+export type {
+  NetraExposure,
+} from './netra/exposure.js';
+
+export {
+  createReport,
+  exportReportJSON,
+} from './netra/reports.js';
+
+export type {
+  NetraReport,
+} from './netra/reports.js';

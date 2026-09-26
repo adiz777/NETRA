@@ -1,7 +1,7 @@
 {
-  "name": "@abhay557/indian-fakedata",
-  "version": "2.1.0",
-  "description": "A generator for realistic Indian demographic data based on Census 2011 statistics.",
+  "name": "netra",
+  "version": "1.0.0",
+  "description": "NETRA — Intelligence Identity Platform",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
     }
   },
   "bin": {
-    "indian-fakedata": "dist/cli.js"
+    "netra": "dist/netra/cli.js"
   },
   "files": [
     "dist",
@@ -24,6 +24,7 @@
     "build": "tsc",
     "dev": "tsx src/index.ts",
     "cli": "tsx src/cli.ts",
+    "netra": "tsx src/netra/cli.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "demo": "tsx scripts/demo.ts",
@@ -32,19 +33,16 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "fake-data",
-    "synthetic-data",
-    "demographic",
-    "census",
+    "netra",
+    "intelligence",
+    "identity",
+    "dossier",
+    "investigation",
+    "network-analysis",
     "india",
-    "abhay557",
-    "mock-data",
-    "testing",
-    "ai-training",
-    "data-generation",
-    "population-simulator"
+    "data-generation"
   ],
-  "author": "Abhay Mourya",
+  "author": "Adi Zala <https://github.com/adiz777>",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
@@ -55,5 +53,8 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.7",
     "xlsx": "^0.18.5"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }
