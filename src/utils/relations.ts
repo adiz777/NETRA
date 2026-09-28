@@ -132,6 +132,7 @@ export function generateFamily(options: FamilyOptions = {}): FamilyUnit {
       spouse.lastName = spouseTokens.slice(1).join(' ') || headSurname;
     }
     family.spouse = spouse;
+    head.spouseName = `${spouse.firstName} ${spouse.lastName}`;
   }
 
   // ── Parents ───────────────────────────────────────────────
@@ -158,7 +159,10 @@ export function generateFamily(options: FamilyOptions = {}): FamilyUnit {
     father.firstName = fatherTokens[0];
     father.lastName = fatherTokens.slice(1).join(' ') || headSurname;
   }
+  // The generated relative is the source of truth for the relationship name.
+  // This prevents stale/mismatched head.fatherName values from leaking into the family graph.
   family.parents.father = father;
+  head.fatherName = `${father.firstName} ${father.lastName}`;
 
   const mother = generate({
     seed: roleSeed(base, 'mother'),
@@ -177,6 +181,7 @@ export function generateFamily(options: FamilyOptions = {}): FamilyUnit {
     mother.lastName = motherTokens.slice(1).join(' ') || headSurname;
   }
   family.parents.mother = mother;
+  head.motherName = `${mother.firstName} ${mother.lastName}`;
 
   // Cross-link parents' spouse names
   if (head.fatherName) mother.spouseName = head.fatherName;
