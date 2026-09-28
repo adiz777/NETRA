@@ -275,40 +275,7 @@ export default function ArchivePage() {
   );
 }
 
-function Sidebar() {
-  return (
-    <aside className="hidden w-56 shrink-0 border-r border-white/10 bg-[#06080c] lg:block">
-      <div className="border-b border-white/10 px-5 py-6">
-        <div className="text-sm font-semibold tracking-[0.35em] text-slate-100">
-          NETRA
-        </div>
-
-        <div className="mt-1 text-[8px] tracking-[0.25em] text-slate-700">
-          INTELLIGENCE SYSTEM
-        </div>
-      </div>
-
-      <nav className="space-y-1 p-3">
-        <NavItem href="/dashboard" label="IDENTITIES" />
-        <NavItem href="/dashboard/cases" label="CASES" />
-        <NavItem href="/dashboard/network" label="NETWORK" />
-        <NavItem href="/dashboard/reports" label="REPORTS" />
-        <NavItem href="/dashboard/archive" label="ARCHIVE" active />
-      </nav>
-
-      <div className="mt-8 border-t border-white/10 px-5 py-5">
-        <div className="text-[8px] tracking-[0.2em] text-slate-700">
-          SYSTEM
-        </div>
-
-        <div className="mt-2 flex items-center gap-2 text-[9px] tracking-[0.15em] text-emerald-500/70">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          OPERATIONAL
-        </div>
-      </div>
-    </aside>
-  );
-}
+// Shared NETRA navigation is provided by NetraSidebar.
 
 function NavItem({
   href,
