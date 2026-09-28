@@ -118,7 +118,7 @@ export default function ArchivePage() {
                 </h1>
 
                 <p className="mt-1 text-[10px] tracking-[0.12em] text-slate-600">
-                  CASE AND IDENTITY RECORD INDEX
+                  CASE, IDENTITY AND REPORT INDEX
                 </p>
               </div>
 
@@ -186,6 +186,12 @@ export default function ArchivePage() {
                   <div className="mt-1 text-[9px] tracking-[0.1em] text-slate-700">
                     THE REQUESTED IDENTITY COULD NOT BE RESOLVED
                   </div>
+                  <Link
+                    href={`/dashboard?identity=${encodeURIComponent(identityId.trim())}`}
+                    className="mt-4 inline-block border border-cyan-500/20 px-4 py-2 text-[9px] tracking-[0.18em] text-cyan-500/60 hover:border-cyan-500/40 hover:text-cyan-400"
+                  >
+                    GENERATE / OPEN IDENTITY
+                  </Link>
                 </div>
               )}
             </section>
@@ -260,12 +266,12 @@ export default function ArchivePage() {
                   </div>
 
                   <div className="mt-1 text-[9px] tracking-[0.1em] text-slate-800">
-                    CASE INDEX CURRENTLY USES SERVER-SIDE SESSION MEMORY
+                    CASE INDEX USES LOCAL PERSISTENT STORAGE
                   </div>
                 </div>
 
                 <div className="font-mono text-[8px] tracking-[0.16em] text-amber-500/50">
-                  PERSISTENT STORAGE // NOT ENABLED
+                  PERSISTENT STORAGE // ENABLED
                 </div>
               </div>
             </section>
@@ -385,6 +391,12 @@ function ArchiveCase({ item }: { item: NetraCase }) {
             className="border border-white/10 px-4 py-2 text-center text-[8px] tracking-[0.18em] text-slate-500 transition hover:border-cyan-500/30 hover:bg-cyan-500/5 hover:text-cyan-400"
           >
             OPEN CASE
+          </Link>
+          <Link
+            href={`/dashboard/reports?caseId=${encodeURIComponent(item.caseId)}`}
+            className="border border-white/10 px-4 py-2 text-center text-[8px] tracking-[0.18em] text-slate-500 transition hover:border-cyan-500/30 hover:bg-cyan-500/5 hover:text-cyan-400"
+          >
+            REPORT
           </Link>
         </div>
       </div>
