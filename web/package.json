@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "dev:vinext": "vinext dev",
+    "dev": "vinext dev",
+    "dev:next": "next dev",
     "build": "vinext build",
     "build:next": "next build",
     "start": "vinext start",
@@ -20,8 +20,8 @@
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "react-server-dom-webpack": "^19.2.8",
-    "vinext": "^1.0.0-beta.13"
+    "react-server-dom-webpack": "19.2.8",
+    "vinext": "1.0.0-beta.13"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.60.2",
@@ -29,7 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vinext/cloudflare": "^1.0.0-beta.10",
+    "@vinext/cloudflare": "1.0.0-beta.10",
     "@vitejs/plugin-rsc": "^0.5.35",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
