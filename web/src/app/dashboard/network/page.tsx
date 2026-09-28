@@ -1,50 +1,73 @@
-
 "use client";
 
-import Link from "next/link";
 import NetraSidebar from "@/components/NetraSidebar";
-import { FormEvent, useState } from "react";
+import Link from "next/link";
+import { FormEvent, useEffect, useState } from "react";
 
 type Person = {
-  id: string;
   name: string;
   relation: string;
+  age?: number;
+  gender?: string;
+  dateOfBirth?: string;
+  fatherName?: string;
+  motherName?: string;
+  maritalStatus?: string;
 };
 
 type Identity = {
-  id?: string;
+  netraId: string;
   profile?: {
-    name?: string;
+    firstName?: string;
+    lastName?: string;
+    age?: number;
+    gender?: string;
+    dateOfBirth?: string;
   };
-  spouse?: {
-    id?: string;
-    name?: string;
-  } | null;
-  parents?: {
-    father?: {
-      id?: string;
-      name?: string;
-    } | null;
-    mother?: {
-      id?: string;
-      name?: string;
-    } | null;
+  family?: {
+    spouse?: Person;
+    parents?: {
+      father?: Person;
+      mother?: Person;
+    };
+    children?: Person[];
+    siblings?: Person[];
   };
-  children?: Array<{
-    id?: string;
-    name?: string;
-  }>;
-  siblings?: Array<{
-    id?: string;
-    name?: string;
-  }>;
+};
+
+type NetraCase = {
+  caseId: string;
+  title: string;
+  status?: string;
+  subjects?: string[];
 };
 
 export default function NetworkPage() {
   const [identityId, setIdentityId] = useState("");
   const [identity, setIdentity] = useState<Identity | null>(null);
+  const [cases, setCases] = useState<NetraCase[]>([]);
+  const [selectedCase, setSelectedCase] = useState("");
   const [loading, setLoading] = useState(false);
+  const [caseLoading, setCaseLoading] = useState(false);
   const [error, setError] = useState("");
+  const [caseMessage, setCaseMessage] = useState("");
+
+  useEffect(() => {
+    loadCases();
+  }, []);
+
+  async function loadCases() {
+    try {
+      const response = await fetch("/api/cases", {
+        cache: "no-store",
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      setCases(data.cases || []);
+    } catch {
+      // Case integration remains optional if the case store is unavailable.
+    }
+  }
 
   async function searchIdentity(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -59,24 +82,20 @@ export default function NetworkPage() {
 
     setLoading(true);
     setError("");
+    setCaseMessage("");
     setIdentity(null);
 
     try {
-      const url =
-        "/api/identity?id=" + encodeURIComponent(id);
-
-      const response = await fetch(url, {
-        method: "GET",
-        cache: "no-store",
-      });
+      const response = await fetch(
+        "/api/identity?id=" + encodeURIComponent(id),
+        { method: "GET", cache: "no-store" },
+      );
 
       if (!response.ok) {
         throw new Error("IDENTITY NOT FOUND");
       }
 
-      const data = await response.json();
-
-      setIdentity(data);
+      setIdentity(await response.json());
     } catch {
       setError("IDENTITY RETRIEVAL FAILED");
     } finally {
@@ -84,7 +103,58 @@ export default function NetworkPage() {
     }
   }
 
+  async function attachToCase() {
+    if (!identity || !selectedCase) {
+      setCaseMessage("SELECT A CASE");
+      return;
+    }
+
+    setCaseLoading(true);
+    setCaseMessage("");
+
+    try {
+      const response = await fetch("/api/cases", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "subject",
+          caseId: selectedCase,
+          identityId: identity.netraId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "CASE UPDATE FAILED");
+      }
+
+      setCases((current) =>
+        current.map((item) =>
+          item.caseId === selectedCase
+            ? {
+                ...item,
+                subjects: data.subjects || item.subjects,
+              }
+            : item,
+        ),
+      );
+      setCaseMessage("SUBJECT ATTACHED TO CASE");
+    } catch (err) {
+      setCaseMessage(
+        err instanceof Error ? err.message : "CASE UPDATE FAILED",
+      );
+    } finally {
+      setCaseLoading(false);
+    }
+  }
+
   const people = buildNetwork(identity);
+  const subjectName = identity?.profile
+    ? [identity.profile.firstName, identity.profile.lastName]
+        .filter(Boolean)
+        .join(" ")
+    : "UNKNOWN SUBJECT";
 
   return (
     <main className="min-h-screen bg-[#05070a] text-slate-200">
@@ -96,18 +166,15 @@ export default function NetworkPage() {
             <div className="text-[9px] tracking-[0.35em] text-cyan-500">
               NETRA // NETWORK
             </div>
-
             <div className="mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <h1 className="text-lg tracking-[0.18em] text-slate-100">
                   RELATIONSHIP NETWORK
                 </h1>
-
                 <p className="mt-1 text-[10px] tracking-[0.12em] text-slate-600">
-                  IDENTITY RELATIONSHIP INTELLIGENCE
+                  FAMILY AND RELATIONSHIP INTELLIGENCE
                 </p>
               </div>
-
               <div className="font-mono text-[9px] tracking-[0.2em] text-slate-700">
                 NETWORK ENGINE // READY
               </div>
@@ -116,24 +183,17 @@ export default function NetworkPage() {
 
           <div className="mx-auto max-w-[1500px] space-y-5 p-6">
             <section className="border border-white/10 bg-[#080c11]">
-              <SectionHeader
-                label="NETWORK SUBJECT"
-                detail="IDENTITY SEARCH"
-              />
-
+              <SectionHeader label="NETWORK SUBJECT" detail="IDENTITY SEARCH" />
               <form
                 onSubmit={searchIdentity}
                 className="grid gap-3 p-5 md:grid-cols-[1fr_auto]"
               >
                 <input
                   value={identityId}
-                  onChange={(event) =>
-                    setIdentityId(event.target.value)
-                  }
+                  onChange={(event) => setIdentityId(event.target.value)}
                   placeholder="ENTER IDENTITY ID"
                   className="border border-white/10 bg-[#05070a] px-4 py-3 font-mono text-xs tracking-[0.12em] text-slate-200 outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
                 />
-
                 <button
                   type="submit"
                   disabled={loading}
@@ -142,7 +202,6 @@ export default function NetworkPage() {
                   {loading ? "SEARCHING" : "LOAD NETWORK"}
                 </button>
               </form>
-
               {error && (
                 <div className="border-t border-red-500/20 bg-red-500/5 px-5 py-3 text-[9px] tracking-[0.16em] text-red-400">
                   {error}
@@ -153,35 +212,47 @@ export default function NetworkPage() {
             {identity && (
               <>
                 <section className="border border-white/10 bg-[#080c11]">
-                  <SectionHeader
-                    label="NETWORK SUBJECT"
-                    detail="ACTIVE IDENTITY"
-                  />
-
+                  <SectionHeader label="NETWORK SUBJECT" detail="ACTIVE IDENTITY" />
                   <div className="grid gap-px bg-white/10 md:grid-cols-4">
-                    <Stat
-                      label="IDENTITY"
-                      value={identity.id || identityId}
-                    />
-
-                    <Stat
-                      label="NAME"
-                      value={
-                        identity.profile?.name ||
-                        "UNKNOWN SUBJECT"
-                      }
-                    />
-
-                    <Stat
-                      label="RELATIONS"
-                      value={String(people.length)}
-                    />
-
-                    <Stat
-                      label="NETWORK STATUS"
-                      value="RESOLVED"
-                    />
+                    <Stat label="IDENTITY" value={identity.netraId} />
+                    <Stat label="NAME" value={subjectName} />
+                    <Stat label="RELATIONS" value={String(people.length)} />
+                    <Stat label="NETWORK STATUS" value="RESOLVED" />
                   </div>
+                </section>
+
+                <section className="border border-white/10 bg-[#080c11]">
+                  <SectionHeader
+                    label="CASE INTEGRATION"
+                    detail="INVESTIGATION WORKSPACE"
+                  />
+                  <div className="grid gap-3 p-5 md:grid-cols-[1fr_auto]">
+                    <select
+                      value={selectedCase}
+                      onChange={(event) => setSelectedCase(event.target.value)}
+                      className="border border-white/10 bg-[#05070a] px-4 py-3 font-mono text-[10px] tracking-[0.12em] text-slate-300 outline-none focus:border-cyan-500/50"
+                    >
+                      <option value="">SELECT CASE</option>
+                      {cases.map((item) => (
+                        <option key={item.caseId} value={item.caseId}>
+                          {item.caseId} // {item.title}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={attachToCase}
+                      disabled={caseLoading || !selectedCase}
+                      className="border border-cyan-500/30 bg-cyan-500/5 px-6 py-3 text-[9px] tracking-[0.18em] text-cyan-400 transition hover:bg-cyan-500/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {caseLoading ? "ATTACHING" : "ATTACH SUBJECT"}
+                    </button>
+                  </div>
+                  {caseMessage && (
+                    <div className="border-t border-white/10 px-5 py-3 text-[9px] tracking-[0.16em] text-slate-500">
+                      {caseMessage}
+                    </div>
+                  )}
                 </section>
 
                 <section className="border border-white/10 bg-[#080c11]">
@@ -189,7 +260,6 @@ export default function NetworkPage() {
                     label="RELATIONSHIP GRAPH"
                     detail="CONNECTED IDENTITIES"
                   />
-
                   <div className="relative min-h-[420px] overflow-hidden bg-[#05070a] p-6">
                     <div className="pointer-events-none absolute inset-0 opacity-30">
                       <div
@@ -201,31 +271,24 @@ export default function NetworkPage() {
                         }}
                       />
                     </div>
-
                     <div className="relative flex min-h-[360px] flex-col items-center justify-center">
                       <div className="relative z-10 flex h-32 w-32 flex-col items-center justify-center rounded-full border border-cyan-500/40 bg-cyan-500/[0.06] text-center shadow-[0_0_50px_rgba(34,211,238,0.08)]">
                         <div className="text-[8px] tracking-[0.2em] text-cyan-500">
                           SUBJECT
                         </div>
-
                         <div className="mt-2 max-w-[100px] truncate text-xs text-slate-200">
-                          {identity.profile?.name ||
-                            "UNKNOWN"}
+                          {subjectName}
                         </div>
-
                         <div className="mt-2 font-mono text-[7px] text-slate-600">
-                          {identity.id || identityId}
+                          {identity.netraId}
                         </div>
                       </div>
 
                       {people.length > 0 ? (
                         <div className="mt-8 grid w-full max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                          {people.map((person) => (
+                          {people.map((person, index) => (
                             <NetworkNode
-                              key={
-                                person.id +
-                                person.relation
-                              }
+                              key={person.relation + person.name + index}
                               person={person}
                             />
                           ))}
@@ -242,21 +305,17 @@ export default function NetworkPage() {
                 <section className="border border-white/10 bg-[#080c11]">
                   <SectionHeader
                     label="RELATION REGISTER"
-                    detail={`${people.length} CONNECTIONS`}
+                    detail={people.length + " CONNECTIONS"}
                   />
-
                   {people.length === 0 ? (
                     <div className="px-5 py-12 text-center text-[9px] tracking-[0.2em] text-slate-700">
                       NO RELATIONSHIP DATA AVAILABLE
                     </div>
                   ) : (
                     <div className="divide-y divide-white/10">
-                      {people.map((person) => (
+                      {people.map((person, index) => (
                         <RelationRow
-                          key={
-                            person.id +
-                            person.relation
-                          }
+                          key={person.relation + person.name + index}
                           person={person}
                         />
                       ))}
@@ -271,7 +330,6 @@ export default function NetworkPage() {
                 <div className="text-[10px] tracking-[0.3em] text-slate-600">
                   NO NETWORK SUBJECT LOADED
                 </div>
-
                 <div className="mt-2 text-[9px] tracking-[0.12em] text-slate-800">
                   ENTER AN IDENTITY ID TO RESOLVE RELATIONSHIPS
                 </div>
@@ -284,205 +342,85 @@ export default function NetworkPage() {
   );
 }
 
-function buildNetwork(
-  identity: Identity | null
-): Person[] {
-  if (!identity) {
-    return [];
-  }
+function buildNetwork(identity: Identity | null): Person[] {
+  if (!identity?.family) return [];
 
   const people: Person[] = [];
 
-  if (identity.spouse?.id) {
-    people.push({
-      id: identity.spouse.id,
-      name: identity.spouse.name || "UNKNOWN",
-      relation: "SPOUSE",
-    });
+  if (identity.family.spouse) {
+    people.push({ ...identity.family.spouse, relation: "SPOUSE", name: getName(identity.family.spouse) });
   }
 
-  if (identity.parents?.father?.id) {
-    people.push({
-      id: identity.parents.father.id,
-      name:
-        identity.parents.father.name ||
-        "UNKNOWN",
-      relation: "FATHER",
-    });
+  if (identity.family.parents?.father) {
+    people.push({ ...identity.family.parents.father, relation: "FATHER", name: getName(identity.family.parents.father) });
   }
 
-  if (identity.parents?.mother?.id) {
-    people.push({
-      id: identity.parents.mother.id,
-      name:
-        identity.parents.mother.name ||
-        "UNKNOWN",
-      relation: "MOTHER",
-    });
+  if (identity.family.parents?.mother) {
+    people.push({ ...identity.family.parents.mother, relation: "MOTHER", name: getName(identity.family.parents.mother) });
   }
 
-  for (const child of identity.children || []) {
-    if (!child.id) {
-      continue;
-    }
-
-    people.push({
-      id: child.id,
-      name: child.name || "UNKNOWN",
-      relation: "CHILD",
-    });
+  for (const child of identity.family.children || []) {
+    people.push({ ...child, relation: "CHILD", name: getName(child) });
   }
 
-  for (const sibling of identity.siblings || []) {
-    if (!sibling.id) {
-      continue;
-    }
-
-    people.push({
-      id: sibling.id,
-      name: sibling.name || "UNKNOWN",
-      relation: "SIBLING",
-    });
+  for (const sibling of identity.family.siblings || []) {
+    people.push({ ...sibling, relation: "SIBLING", name: getName(sibling) });
   }
 
   return people;
 }
 
-// Shared NETRA navigation is provided by NetraSidebar.
-
-function NavItem({
-  href,
-  label,
-  active = false,
-}: {
-  href: string;
-  label: string;
-  active?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={[
-        "block border px-3 py-2.5 text-[9px] tracking-[0.18em] transition",
-        active
-          ? "border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-          : "border-transparent text-slate-600 hover:border-white/10 hover:bg-white/[0.02] hover:text-slate-300",
-      ].join(" ")}
-    >
-      {label}
-    </Link>
-  );
+function getName(person: Person) {
+  return person.name || "UNKNOWN";
 }
 
-function SectionHeader({
-  label,
-  detail,
-}: {
-  label: string;
-  detail: string;
-}) {
+function SectionHeader({ label, detail }: { label: string; detail: string }) {
   return (
     <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-      <div className="text-[9px] tracking-[0.25em] text-slate-500">
-        {label}
-      </div>
-
-      <div className="text-[8px] tracking-[0.18em] text-slate-700">
-        {detail}
-      </div>
+      <div className="text-[9px] tracking-[0.25em] text-slate-500">{label}</div>
+      <div className="text-[8px] tracking-[0.18em] text-slate-700">{detail}</div>
     </div>
   );
 }
 
-function Stat({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-[#080c11] px-5 py-4">
-      <div className="text-[8px] tracking-[0.2em] text-slate-600">
-        {label}
-      </div>
-
-      <div className="mt-2 truncate font-mono text-xs tracking-[0.08em] text-slate-300">
-        {value}
-      </div>
+      <div className="text-[8px] tracking-[0.2em] text-slate-600">{label}</div>
+      <div className="mt-2 truncate font-mono text-xs tracking-[0.08em] text-slate-300">{value}</div>
     </div>
   );
 }
 
-function NetworkNode({
-  person,
-}: {
-  person: Person;
-}) {
+function NetworkNode({ person }: { person: Person }) {
   return (
-    <Link
-      href={
-        "/dashboard?identity=" +
-        encodeURIComponent(person.id)
-      }
-      className="border border-white/10 bg-[#080c11] p-4 transition hover:border-cyan-500/30 hover:bg-cyan-500/[0.03]"
-    >
+    <div className="border border-white/10 bg-[#080c11] p-4">
       <div className="flex items-center justify-between gap-3">
-        <div className="text-[8px] tracking-[0.18em] text-cyan-500/70">
-          {person.relation}
-        </div>
-
-        <div className="font-mono text-[7px] text-slate-700">
-          NODE
-        </div>
+        <div className="text-[8px] tracking-[0.18em] text-cyan-500/70">{person.relation}</div>
+        <div className="font-mono text-[7px] text-slate-700">PROFILE</div>
       </div>
-
-      <div className="mt-3 truncate text-xs text-slate-300">
-        {person.name}
+      <div className="mt-3 truncate text-xs text-slate-300">{person.name}</div>
+      <div className="mt-2 grid grid-cols-2 gap-2 text-[8px] tracking-[0.08em] text-slate-600">
+        <span>AGE {person.age ?? "—"}</span>
+        <span>{String(person.gender || "—").toUpperCase()}</span>
       </div>
-
-      <div className="mt-2 truncate font-mono text-[8px] tracking-[0.08em] text-slate-600">
-        {person.id}
-      </div>
-    </Link>
-  );
-}
-
-function RelationRow({
-  person,
-}: {
-  person: Person;
-}) {
-  return (
-    <div className="grid gap-4 px-5 py-5 md:grid-cols-[140px_1fr_180px_auto] md:items-center">
-      <div className="text-[8px] tracking-[0.18em] text-cyan-500/70">
-        {person.relation}
-      </div>
-
-      <div>
-        <div className="text-xs text-slate-300">
-          {person.name}
-        </div>
-
-        <div className="mt-1 font-mono text-[8px] tracking-[0.08em] text-slate-700">
-          {person.id}
-        </div>
-      </div>
-
-      <div className="text-[8px] tracking-[0.14em] text-slate-700">
-        CONNECTED IDENTITY
-      </div>
-
-      <Link
-        href={
-          "/dashboard?identity=" +
-          encodeURIComponent(person.id)
-        }
-        className="border border-white/10 px-3 py-2 text-center text-[8px] tracking-[0.16em] text-slate-500 transition hover:border-cyan-500/30 hover:text-cyan-400"
-      >
-        OPEN
-      </Link>
     </div>
   );
 }
 
+function RelationRow({ person }: { person: Person }) {
+  return (
+    <div className="grid gap-4 px-5 py-5 md:grid-cols-[140px_1fr_180px] md:items-center">
+      <div className="text-[8px] tracking-[0.18em] text-cyan-500/70">{person.relation}</div>
+      <div>
+        <div className="text-xs text-slate-300">{person.name}</div>
+        <div className="mt-1 text-[8px] tracking-[0.08em] text-slate-700">
+          AGE {person.age ?? "—"} // DOB {person.dateOfBirth || "—"}
+        </div>
+      </div>
+      <div className="text-[8px] tracking-[0.14em] text-slate-700">
+        FAMILY PROFILE
+      </div>
+    </div>
+  );
+}
