@@ -2,7 +2,7 @@
 
 > **CLASSIFIED INTELLIGENCE SYSTEM**
 
-NETRA is an intelligence-oriented identity generation and investigation platform built for deterministic synthetic-data generation, identity analysis, relationship mapping, case management, and intelligence-style reporting.
+NETRA is an intelligence-oriented identity generation and investigation platform built for deterministic fictional-data generation, identity analysis, relationship mapping, case management, and intelligence-style reporting.
 
 It combines a deterministic identity engine with a secure web interface designed around the visual language of a modern intelligence system.
 
@@ -46,8 +46,6 @@ PROFILE GENERATION
 IDENTITY DOSSIER
 ```
 
-The same identifier can therefore be queried repeatedly without requiring a database containing the generated identity itself.
-
 Each generated identity can contain:
 
 * Personal profile
@@ -61,7 +59,7 @@ Each generated identity can contain:
 * Skills
 * Life events
 * Narratives
-* Government-ID-style identifiers
+* Government-ID-style test identifiers
 * Metadata
 
 ---
@@ -97,16 +95,6 @@ An identity can be searched directly using its identifier.
 
 If an identifier does not already exist in storage, NETRA generates the identity deterministically.
 
-```text
-SEARCH
-  ↓
-IDENTIFIER FOUND?
-  ├── YES → LOAD IDENTITY
-  └── NO  → GENERATE IDENTITY
-                    ↓
-              DISPLAY DOSSIER
-```
-
 No permanent identity database is required for deterministic generation.
 
 ---
@@ -123,8 +111,6 @@ Network analysis can be used to visualise:
 * Subject connections
 * Network structure
 * Relationship metadata
-
-The network interface is designed to provide a higher-level view of connections rather than forcing investigators to inspect identities individually.
 
 ---
 
@@ -144,63 +130,19 @@ Cases can contain:
 * Priority
 * Status
 
-Case identifiers are generated independently and use the format:
+Case identifiers use the format:
 
 ```text
 CASE-XXXXXX
 ```
 
-Example:
-
-```text
-CASE-K7M2QP
-```
-
-Case names remain exactly as entered by the operator.
-
----
-
-## EVIDENCE & NOTES
-
-Evidence and investigative notes can be attached to individual cases.
-
-This provides a foundation for organising intelligence collected during an investigation without mixing case information directly into the generated identity engine.
-
-Case information is stored through the server-side local data store. Identity generation remains deterministic and independent of case storage.
-
 ---
 
 ## REPORTING
 
-NETRA provides intelligence-style report views for:
+NETRA provides intelligence-style report views for identity dossiers, relationship networks, and case intelligence.
 
-### Identity Dossier
-
-Structured information about a generated identity.
-
-### Relationship Network
-
-A view of the subject and its associated relationships.
-
-### Case Intelligence
-
-A consolidated view of case subjects, evidence, notes, and timeline information.
-
-Reports are generated from the information currently available to NETRA rather than from an external government or law-enforcement database.
-
----
-
-## ARCHIVE
-
-The archive interface provides a central view of available case records.
-
-It allows operators to:
-
-* Search cases
-* Filter records
-* Inspect case metadata
-* Open individual cases
-* Review stored investigative information
+Reports are generated from information currently available to NETRA rather than from an external government or law-enforcement database.
 
 ---
 
@@ -219,11 +161,7 @@ The application also includes:
 * Session/security audit interface
 * No client-side credential storage
 
-### Important
-
 For production deployment, authentication secrets and credentials should be stored in the hosting platform's secret/environment configuration.
-
-Never expose operational credentials in client-side code.
 
 ---
 
@@ -243,22 +181,6 @@ NETRA ENGINE
 DETERMINISTIC GENERATION
 ```
 
-A healthy system returns:
-
-```json
-{
-  "service": "NETRA",
-  "status": "operational",
-  "checks": {
-    "api": "ok",
-    "netra": "ok",
-    "deterministic": "ok"
-  }
-}
-```
-
-The deterministic check deliberately ignores volatile generation timestamps while verifying the generated identity itself remains reproducible.
-
 ---
 
 ## API
@@ -269,29 +191,12 @@ The deterministic check deliberately ignores volatile generation timestamps whil
 GET /api/identity?id=<IDENTIFIER>
 ```
 
-Returns a deterministic NETRA identity.
-
-Example:
-
-```text
-/api/identity?id=NETRA-001
-```
-
 ### Cases
 
 ```text
 GET  /api/cases
 GET  /api/cases?caseId=<CASE_ID>
 POST /api/cases
-```
-
-Case actions support operations including:
-
-```text
-create
-subject
-note
-evidence
 ```
 
 ### Authentication
@@ -320,12 +225,14 @@ GET /api/health
 
 ### Web Interface
 
-* Next.js
+* Next.js 16
+* vinext
+* Vite
 * React
 * TypeScript
 * Tailwind CSS
 * App Router
-* Turbopack
+* Cloudflare Workers
 
 ### Architecture
 
@@ -365,44 +272,6 @@ NETRA
 
 ---
 
-## PROJECT STRUCTURE
-
-```text
-NETRA/
-│
-├── src/
-│   ├── core/
-│   ├── database/
-│   ├── netra/
-│   ├── utils/
-│   ├── cli.ts
-│   ├── index.ts
-│   ├── types.ts
-│   └── version.ts
-│
-├── tests/
-│
-├── web/
-│   └── src/
-│       └── app/
-│           ├── api/
-│           ├── dashboard/
-│           ├── login/
-│           └── page.tsx
-│
-├── schema/
-│   └── profile-2.0.9.json
-│
-├── .github/
-├── package.json
-├── package-lock.json
-├── tsconfig.json
-├── vitest.config.ts
-└── README.md
-```
-
----
-
 ## INSTALLATION
 
 Clone the repository:
@@ -416,11 +285,6 @@ Install dependencies:
 
 ```bash
 npm install
-```
-
-Install web dependencies:
-
-```bash
 cd web
 npm install
 cd ..
@@ -430,9 +294,7 @@ cd ..
 
 ## ENVIRONMENT
 
-The web application expects authentication configuration through environment variables.
-
-Example:
+The web application expects authentication configuration through environment variables:
 
 ```env
 NETRA_USERNAME=your_username
@@ -460,24 +322,42 @@ Build the core package:
 npm run build
 ```
 
-Build the web application:
+Run the original Next.js development server:
+
+```bash
+cd web
+npm run dev
+```
+
+Run the vinext development server:
+
+```bash
+cd web
+npm run dev:vinext
+```
+
+Check vinext compatibility:
+
+```bash
+cd web
+npm run check:vinext
+```
+
+Build the Cloudflare deployment:
 
 ```bash
 cd web
 npm run build
 ```
 
-Run the web application during development:
+Deploy to Cloudflare Workers:
 
 ```bash
-npm run dev
+cd web
+npm run deploy
 ```
 
-The development interface is normally available at:
-
-```text
-http://localhost:3000
-```
+Cloudflare currently recommends vinext as the default Next.js deployment path for Workers. NETRA uses vinext instead of the OpenNext adapter.
 
 ---
 
@@ -485,31 +365,11 @@ http://localhost:3000
 
 NETRA includes automated tests covering major areas of the generation engine and CLI.
 
-The test suite covers areas including:
-
-* Identity generation
-* Determinism
-* Demographics
-* Geography
-* Employment
-* Education
-* Family
-* Life events
-* Narratives
-* Languages
-* Skills
-* Privacy
-* Schema validation
-* CLI behaviour
-* Performance
-
 The project is expected to maintain a passing test suite before deployment.
 
 ---
 
 ## DETERMINISM
-
-Deterministic generation is one of NETRA's core properties.
 
 For a given identifier:
 
@@ -519,15 +379,7 @@ ID → SEED → GENERATED IDENTITY
 
 Repeated generation produces the same underlying identity data.
 
-Volatile metadata such as:
-
-```text
-generatedAt
-```
-
-may naturally differ between requests.
-
-The health endpoint therefore excludes volatile fields when verifying deterministic generation.
+Volatile metadata such as `generatedAt` may naturally differ between requests.
 
 ---
 
@@ -547,11 +399,9 @@ Do not use generated identities to impersonate real people or to create fraudule
 
 The deterministic identity engine does not require a persistent identity database.
 
-Case information is currently maintained through server-side runtime storage.
+Case and audit information currently use server-side local storage suitable for a single-instance development environment. Cloudflare Workers does not provide a normal persistent filesystem, so production deployments should use shared storage such as D1, KV, or R2 for durable case/audit data.
 
-This means case data may be lost when the server process restarts.
-
-The architecture keeps identity generation separate from case storage so that persistent storage can be introduced without redesigning the generation engine.
+The identity generation engine remains deterministic and independent of case storage.
 
 ---
 
@@ -568,8 +418,6 @@ PRECISE
 OPERATIONAL
 INTELLIGENCE-FOCUSED
 ```
-
-The goal is to make the system feel like an internal intelligence platform rather than a conventional CRUD dashboard.
 
 The visual language should remain restrained: sophisticated intelligence-system design first, cyberpunk influence second.
 
@@ -602,7 +450,7 @@ The current system provides:
 
 ## LICENSE
 
-See [`LICENSE`](LICENSE) for licensing information.
+See [LICENSE](LICENSE) for licensing information.
 
 ---
 
