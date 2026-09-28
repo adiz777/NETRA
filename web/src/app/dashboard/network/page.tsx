@@ -5,7 +5,9 @@ import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 
 type Person = {
-  name: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
   relation: string;
   age?: number;
   gender?: string;
@@ -371,7 +373,7 @@ function buildNetwork(identity: Identity | null): Person[] {
 }
 
 function getName(person: Person) {
-  return person.name || "UNKNOWN";
+  return person.name || [person.firstName, person.lastName].filter(Boolean).join(" ") || "UNKNOWN";
 }
 
 function SectionHeader({ label, detail }: { label: string; detail: string }) {
