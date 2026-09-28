@@ -441,6 +441,26 @@ export function generateVehicleRegistration(stateId: string, rng: SeededRNG): st
 }
 
 // ─────────────────────────────────────────────────────────────
+// Driving Licence / Passport (synthetic test identifiers)
+// ─────────────────────────────────────────────────────────────
+
+export function generateDrivingLicense(stateCode: string, rng: SeededRNG): string {
+  const code = stateCode.replace(/[^A-Z]/gi, '').toUpperCase().slice(0, 2).padEnd(2, 'X');
+  const year = 2000 + Math.floor(rng.next() * 27);
+  let serial = '';
+  for (let i = 0; i < 11; i++) serial += String(Math.floor(rng.next() * 10));
+  return `${code}-${String(year).slice(2)}${serial}`;
+}
+
+export function generatePassport(rng: SeededRNG): string {
+  const prefixes = ['A', 'B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'T', 'V', 'W'];
+  const prefix = uniformSample(prefixes, rng);
+  let digits = '';
+  for (let i = 0; i < 7; i++) digits += String(Math.floor(rng.next() * 10));
+  return `${prefix}${digits}`;
+}
+
+// ─────────────────────────────────────────────────────────────
 // PIN Code (State-mapped)
 // ─────────────────────────────────────────────────────────────
 
