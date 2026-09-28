@@ -6,8 +6,8 @@ import NetraSidebar from "@/components/NetraSidebar";
 import { useEffect, useMemo, useState } from "react";
 
 type NetraCase = {
-  id: string;
-  name: string;
+  caseId: string;
+  title: string;
   description?: string;
   status?: string;
   priority?: string;
@@ -88,8 +88,8 @@ export default function ArchivePage() {
 
     return cases.filter((item) =>
       [
-        item.id,
-        item.name,
+        item.caseId,
+        item.title,
         item.description,
         item.status,
         item.priority,
@@ -246,7 +246,7 @@ export default function ArchivePage() {
               ) : (
                 <div className="divide-y divide-white/10">
                   {filteredCases.map((item) => (
-                    <ArchiveCase key={item.id} item={item} />
+                    <ArchiveCase key={item.caseId} item={item} />
                   ))}
                 </div>
               )}
@@ -352,7 +352,7 @@ function ArchiveCase({ item }: { item: NetraCase }) {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-mono text-[10px] tracking-[0.15em] text-cyan-500">
-              {item.id}
+              {item.caseId}
             </span>
 
             <span className="border border-white/10 px-2 py-1 text-[7px] tracking-[0.16em] text-slate-600">
@@ -365,7 +365,7 @@ function ArchiveCase({ item }: { item: NetraCase }) {
           </div>
 
           <h2 className="mt-3 text-sm tracking-[0.1em] text-slate-200">
-            {item.name || "UNTITLED CASE"}
+            {item.title || "UNTITLED CASE"}
           </h2>
 
           {item.description && (
@@ -381,7 +381,7 @@ function ArchiveCase({ item }: { item: NetraCase }) {
           </div>
 
           <Link
-            href={`/dashboard/cases/${encodeURIComponent(item.id)}`}
+            href={`/dashboard/cases/${encodeURIComponent(item.caseId)}`}
             className="border border-white/10 px-4 py-2 text-center text-[8px] tracking-[0.18em] text-slate-500 transition hover:border-cyan-500/30 hover:bg-cyan-500/5 hover:text-cyan-400"
           >
             OPEN CASE
