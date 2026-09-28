@@ -20,6 +20,8 @@ function normalizeIdentity(identity: ReturnType<typeof getIdentityById>) {
         aadhaar: ids.aadhaar,
         pan: ids.pan,
         voterId: ids.voterId,
+        drivingLicense: ids.drivingLicense,
+        passport: ids.passport,
         phone: ids.phone,
         email: ids.email,
         bankName: ids.bank.bankName,
@@ -28,6 +30,11 @@ function normalizeIdentity(identity: ReturnType<typeof getIdentityById>) {
         upiId: ids.upi,
         vehicleRegistration: ids.vehicleRegistration,
       },
+
+      maritalStatusLabel:
+        profile.maritalStatus === "never_married"
+          ? "NEVER MARRIED"
+          : profile.maritalStatus.replace("_", " ").toUpperCase(),
 
       address: {
         addressLine: profile.addressLine,
