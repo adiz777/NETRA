@@ -9,6 +9,7 @@ const items = [
   { href: "/dashboard/network", label: "NETWORK", icon: "03" },
   { href: "/dashboard/reports", label: "REPORTS", icon: "04" },
   { href: "/dashboard/archive", label: "ARCHIVE", icon: "05" },
+  { href: "/dashboard/security", label: "SECURITY", icon: "06" },
 ];
 
 export default function NetraSidebar() {
