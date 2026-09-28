@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import NetraSidebar from "@/components/NetraSidebar";
 import { FormEvent, useEffect, useState } from "react";
 
 type NetraCase = {
@@ -111,6 +112,9 @@ export default function CasesPage() {
   return (
     <main className="min-h-screen bg-[#050709] text-zinc-300">
       <div className="min-h-screen bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:40px_40px]">
+        <div className="flex min-h-screen">
+          <NetraSidebar />
+          <section className="min-w-0 flex-1">
         <header className="border-b border-zinc-800 bg-[#07090c]/95">
           <div className="mx-auto flex max-w-[1600px] items-center justify-between px-6 py-4">
             <div>
@@ -285,6 +289,7 @@ export default function CasesPage() {
                 ))}
               </div>
             )}
+          </section>
           </section>
         </div>
       </div>
