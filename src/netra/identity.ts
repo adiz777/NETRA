@@ -5,10 +5,7 @@ import type {
   DemographicProfile,
   GenerationConstraints,
 } from '../types.js';
-import {
-  generateGovernmentIds,
-  type NetraGovernmentIds,
-} from './governmentIds.js';
+import type { NetraGovernmentIds } from './governmentIds.js';
 
 export interface NetraIdentity {
   netraId: string;
@@ -40,46 +37,27 @@ function createNetraId(seed: string): string {
   return `NETRA-${value}`;
 }
 
-function extractIdentityDetails(
-  profile: DemographicProfile,
-): {
-  firstName: string;
-  lastName: string;
-  stateId: string;
-  district: string;
-} {
-  const data =
-    profile as unknown as Record<string, unknown>;
-
-  const firstName =
-    typeof data.firstName === 'string'
-      ? data.firstName
-      : 'Amit';
-
-  const lastName =
-    typeof data.lastName === 'string'
-      ? data.lastName
-      : 'Sharma';
-
-  const stateId =
-    typeof data.stateId === 'string'
-      ? data.stateId
-      : typeof data.state === 'string'
-        ? data.state
-        : 'GJ';
-
-  const district =
-    typeof data.district === 'string'
-      ? data.district
-      : typeof data.city === 'string'
-        ? data.city
-        : 'Ahmedabad';
-
+function buildGovernmentIds(profile: DemographicProfile): NetraGovernmentIds {
   return {
-    firstName,
-    lastName,
-    stateId,
-    district,
+    aadhaar: profile.aadhaarNumber,
+    pan: profile.panNumber,
+    voterId: profile.voterIdNumber,
+    phone: profile.phoneNumber,
+    email: profile.email,
+
+    bank: {
+      bankName: profile.bankName,
+      bankIFSC: profile.bankIFSC,
+      bankAccountNumber: profile.bankAccountNumber,
+    },
+
+    upi: profile.upiId ?? '',
+    vehicleRegistration: profile.vehicleRegistration ?? '',
+
+    address: {
+      addressLine: profile.addressLine,
+      locality: profile.locality,
+    },
   };
 }
 
@@ -107,23 +85,11 @@ export function generateIdentity(
     includeProbabilityMetrics: true,
   });
 
-  const details =
-    extractIdentityDetails(profile);
-
-  const governmentIds =
-    generateGovernmentIds(
-      seed,
-      details.firstName,
-      details.lastName,
-      details.stateId,
-      details.district,
-    );
-
   return {
     netraId: createNetraId(seed),
     seed,
     profile,
-    governmentIds,
+    governmentIds: buildGovernmentIds(profile),
     family,
 
     metadata: {
