@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import NetraSidebar from "@/components/NetraSidebar";
 
 type Person = {
   firstName?: string;
@@ -195,70 +196,8 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-[#05070a] text-slate-200">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        {/* SIDEBAR */}
-        <aside className="w-full border-b border-white/10 bg-[#070a0f] lg:w-64 lg:border-b-0 lg:border-r">
-          <div className="border-b border-white/10 px-6 py-6">
-            <div className="text-2xl font-semibold tracking-[0.3em] text-white">
-              NETRA
-            </div>
-
-            <div className="mt-2 text-[9px] tracking-[0.25em] text-slate-600">
-              INTELLIGENCE SYSTEM
-            </div>
-          </div>
-
-          <nav className="p-3">
-            <Link
-              href="/dashboard"
-              className="block border border-cyan-400/30 bg-cyan-400/5 px-4 py-3 text-[10px] tracking-[0.2em] text-cyan-400"
-            >
-              IDENTITY INTELLIGENCE
-            </Link>
-
-            <Link
-              href="/dashboard/cases"
-              className="mt-1 block border border-transparent px-4 py-3 text-[10px] tracking-[0.2em] text-slate-500 transition hover:border-white/10 hover:bg-white/[0.02] hover:text-slate-300"
-            >
-              CASES
-            </Link>
-
-            <Link
-              href="/dashboard/network"
-              className="mt-1 block border border-transparent px-4 py-3 text-[10px] tracking-[0.2em] text-slate-500 transition hover:border-white/10 hover:bg-white/[0.02] hover:text-slate-300"
-            >
-              NETWORK
-            </Link>
-
-            <Link
-              href="/dashboard/reports"
-              className="mt-1 block border border-transparent px-4 py-3 text-[10px] tracking-[0.2em] text-slate-500 transition hover:border-white/10 hover:bg-white/[0.02] hover:text-slate-300"
-            >
-              REPORTS
-            </Link>
-
-            <Link
-              href="/dashboard/archive"
-              className="mt-1 block border border-transparent px-4 py-3 text-[10px] tracking-[0.2em] text-slate-500 transition hover:border-white/10 hover:bg-white/[0.02] hover:text-slate-300"
-            >
-              ARCHIVE
-            </Link>
-          </nav>
-
-          <div className="mt-auto hidden border-t border-white/10 p-5 lg:block">
-            <div className="text-[8px] tracking-[0.2em] text-slate-700">
-              SYSTEM
-            </div>
-
-            <div className="mt-3 flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              <span className="text-[9px] tracking-[0.15em] text-slate-500">
-                OPERATIONAL
-              </span>
-            </div>
-          </div>
-        </aside>
-
-        {/* MAIN */}
+        <NetraSidebar />
+     {/* MAIN */}
         <section className="min-w-0 flex-1">
           {/* HEADER */}
           <header className="border-b border-white/10 bg-[#06090d] px-5 py-5 md:px-8">
