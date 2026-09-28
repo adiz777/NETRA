@@ -14,50 +14,22 @@ type AuditEvent = {
   source: string;
 };
 
-const initialAudit: AuditEvent[] = [
-  {
-    id: "AUD-001",
-    timestamp: new Date().toISOString(),
-    action: "SESSION INITIALIZED",
-    actor: "OPERATOR",
-    target: "NETRA",
-    status: "SUCCESS",
-    source: "AUTH",
-  },
-  {
-    id: "AUD-002",
-    timestamp: new Date().toISOString(),
-    action: "AUDIT ENGINE ONLINE",
-    actor: "SYSTEM",
-    target: "SECURITY",
-    status: "SYSTEM",
-    source: "CORE",
-  },
-];
-
 export default function SecurityPage() {
-  const [audit, setAudit] = useState<AuditEvent[]>(initialAudit);
+  const [audit, setAudit] = useState<AuditEvent[]>([]);
   const [filter, setFilter] = useState("ALL");
 
   useEffect(() => {
-    const stored = window.sessionStorage.getItem("netra_audit");
-
-    if (stored) {
+    async function loadAudit() {
       try {
-        const parsed = JSON.parse(stored);
-
-        if (Array.isArray(parsed)) {
-          setAudit(parsed);
-        }
+        const response = await fetch("/api/audit", { cache: "no-store" });
+        if (!response.ok) return;
+        const data = await response.json();
+        setAudit(Array.isArray(data.events) ? data.events : []);
       } catch {
-        window.sessionStorage.removeItem("netra_audit");
+        setAudit([]);
       }
-    } else {
-      window.sessionStorage.setItem(
-        "netra_audit",
-        JSON.stringify(initialAudit)
-      );
     }
+    void loadAudit();
   }, []);
 
   const filteredAudit = useMemo(() => {
@@ -68,41 +40,40 @@ export default function SecurityPage() {
     return audit.filter((event) => event.status === filter);
   }, [audit, filter]);
 
-  function recordEvent(
+  async function recordEvent(
     action: string,
     status: AuditEvent["status"] = "SYSTEM"
   ) {
-    const event: AuditEvent = {
-      id: `AUD-${String(Date.now()).slice(-6)}`,
-      timestamp: new Date().toISOString(),
-      action,
-      actor: status === "SYSTEM" ? "SYSTEM" : "OPERATOR",
-      target: "NETRA",
-      status,
-      source: "SECURITY",
-    };
-
-    const next = [event, ...audit].slice(0, 100);
-
-    setAudit(next);
-    window.sessionStorage.setItem("netra_audit", JSON.stringify(next));
+    try {
+      const response = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, status, source: "SECURITY" }),
+      });
+      if (response.ok) {
+        const event = await response.json();
+        setAudit((current) => [event, ...current].slice(0, 100));
+      }
+    } catch {
+      // Keep the security interface usable if the audit service is unavailable.
+    }
   }
 
-  function clearAudit() {
-    const reset: AuditEvent[] = [
-      {
-        id: `AUD-${String(Date.now()).slice(-6)}`,
-        timestamp: new Date().toISOString(),
-        action: "AUDIT LOG RESET",
-        actor: "OPERATOR",
-        target: "SECURITY",
-        status: "SUCCESS",
-        source: "SECURITY",
-      },
-    ];
+  async function clearAudit() {
+    try {
+      const response = await fetch("/api/audit", { method: "DELETE" });
+      if (response.ok) {
+        const event = await response.json();
+        setAudit([event]);
+      }
+    } catch {
+      // No client-side audit mutation when the server is unavailable.
+    }
+  }
 
-    setAudit(reset);
-    window.sessionStorage.setItem("netra_audit", JSON.stringify(reset));
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/login";
   }
 
   return (
@@ -216,7 +187,7 @@ export default function SecurityPage() {
                   <button
                     type="button"
                     onClick={() =>
-                      recordEvent("SECURITY CHECK EXECUTED", "SYSTEM")
+                      void recordEvent("SECURITY CHECK EXECUTED", "SYSTEM")
                     }
                     className="border border-white/10 px-3 py-2 text-[8px] tracking-[0.16em] text-slate-500 transition hover:border-cyan-500/30 hover:text-cyan-400"
                   >
@@ -225,12 +196,20 @@ export default function SecurityPage() {
 
                   <button
                     type="button"
-                    onClick={clearAudit}
+                    onClick={() => void clearAudit()}
                     className="border border-red-500/20 px-3 py-2 text-[8px] tracking-[0.16em] text-red-400/70 transition hover:bg-red-500/5 hover:text-red-400"
                   >
                     RESET LOG
                   </button>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => void logout()}
+                  className="border border-red-500/20 px-3 py-2 text-[8px] tracking-[0.16em] text-red-400/70 transition hover:bg-red-500/5 hover:text-red-400"
+                >
+                  TERMINATE SESSION
+                </button>
               </div>
 
               {filteredAudit.length === 0 ? (
@@ -252,10 +231,9 @@ export default function SecurityPage() {
               </div>
 
               <p className="mt-2 max-w-4xl text-[9px] leading-5 tracking-[0.05em] text-slate-700">
-                The current NETRA audit layer is a frontend session audit
-                interface. Production-grade immutable audit storage should be
-                backed by a server-side persistent datastore before deployment
-                as an internet-facing intelligence system.
+                Authentication uses a signed HTTP-only session. Audit events
+                are written server-side and retained in the local application
+                data store.
               </p>
             </section>
           </div>
