@@ -507,8 +507,12 @@ export interface DemographicProfile {
   aadhaarNumber: string;
   /** PAN card number (ABCDE1234F format) */
   panNumber: string;
-  /** Voter ID (ABC1234567 format) */
+  /** Voter ID (synthetic EPIC-style format) */
   voterIdNumber: string;
+  /** Synthetic driving licence identifier */
+  drivingLicenseNumber: string;
+  /** Synthetic passport identifier */
+  passportNumber: string;
   /** 10-digit mobile number with state-based prefix */
   phoneNumber: string;
   /** Email address */
