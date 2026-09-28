@@ -6,62 +6,18 @@ within one version; across versions it is not.
 
 ## 2.1.0
 
-- **Occupation now follows education (breaking).** Occupation used to be
-  sampled independently of schooling, so graduates routinely rolled farm
-  jobs. The occupation weights are now conditioned on education:
-  graduates skew strongly white-collar, the unschooled toward farm work.
-  Same draw count, so the stream layout is intact, but occupation-driven
-  fields (sector, income, timelines, personas) resolve differently than
-  2.0.9 for the same seed. Explicit `occupation` constraints still win.
-- **Employment timeline keyed by occupation.** Timeline stages used the
-  employment sector for titles and occupation labels, which produced
-  mismatches (cultivators titled "Kirana Shop Owner", informal
-  `other_worker` profiles relabelled `agricultural_labourer`). Stages now
-  derive titles and occupation from the profile's own occupation; only
-  `non_worker` histories sample a past sector. `sector` still mirrors
-  `employmentSector`, so the two always agree. The key moved from the end
-  of the profile to right below `occupation`; values are unchanged.
-- **Jobs match the degree.** The current timeline spell draws from the
-  profile's field of study, and every sector title pool grew. Doctor-grade
-  titles additionally require a professional degree.
-- **Native script output.** Every profile carries `nativeScript` with names,
-  district and address transliterated into the mother-tongue script
-  (Devanagari, Bengali, Gujarati, Gurmukhi, Kannada, Malayalam, Tamil,
-  Telugu, Odia; Latin passthrough otherwise). Pure string mapping, no RNG
-  draws, so seeded output is untouched. `transliterate()` /
-  `transliterate()` and `scriptForLanguage()` / `script_for_language()`
-  are exported for prompts and free text.
-- **Life events timeline.** Every profile carries `lifeEvents` with dated
-  birth, marriage, children, migration, job-switch and retirement events,
-  cross-checked against age, marital status, child count, migration flag
-  and both existing timelines.
-- **Household economy kit.** Every profile carries `householdEconomy` with
-  a monthly budget split summing exactly to expenditure, 0-2 affordable
-  loans with real EMI math (total EMI capped at 60% of income), and a
-  credit history whose score bands track missed payments.
-- **Festival calendar.** Personas, chats and QA derive dated observances
-  on demand from religion and state instead of storing them on the
-  profile: pan-Indian festivals from the family's religion plus regional
-  ones that stay in their states (Pongal, Bihu, Onam, Durga Puja, Chhath,
-  Teej, Baisakhi, Ganesh Chaturthi). Everyone shares one stream per
-  profile, so memories and chats always agree. Lunisolar dates are
-  typical, not exact.
-- **SFT pair builder.** `buildSFTPairs()` / `build_sft_pairs()` turn a
-  profile (plus optional narratives) into grounded instruction/response
-  pairs with `sftPairsToJsonl()` / `sft_pairs_to_jsonl()` JSONL export.
-- **Grounded QA pairs.** `buildQAPairs()` / `build_qa_pairs()` turn a
-  profile into question/answer pairs for retrieval and comprehension
-  evaluation. Every answer is templated from profile fields and carries
-  `citations`, the exact field paths it was built from.
-- **Eval harness.** `evaluateDataset()` / `evaluate_dataset()` score any
-  batch with one quality number built from census drift, schema validity
-  and internal consistency, plus a `--eval` command in both CLIs.
-- **Geospatial points.** Every profile carries `geo` with an approximate
-  latitude/longitude drawn around the state capital, tighter for urban
-  profiles, clamped inside a generous state bounding box. District-level
-  polygons are not bundled, so points are district-approximate, not
-  rooftop-accurate.
-
+- NETRA identity generation and deterministic identity lookup.
+- Government-ID-style test identifiers for generated identities.
+- Family, demographic, education, employment and life-event generation.
+- Identity dossier and intelligence-focused web interface.
+- Case management with subjects, evidence, notes and timelines.
+- Identity relationship and network visualization.
+- Intelligence reports and archive views.
+- Authentication and protected dashboard routes.
+- Health endpoint with deterministic-generation verification.
+- Security and session audit interface.
+- CLI and programmatic generation remain supported.
+- Generated records are fictional test data and are not official government records.
 ## 2.0.9
 
 - **Employment timeline.** New `employmentTimeline` on every profile:
@@ -123,3 +79,4 @@ within one version; across versions it is not.
 
 - Added `educationTimeline`, `personalityTraits` and `moviePreferences` to
   every profile.
+
