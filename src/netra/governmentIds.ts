@@ -1,4 +1,5 @@
 import { createRNG, normalizeSeed } from '../core/sampler.js';
+
 import {
   generateAadhaar,
   generatePAN,
@@ -17,9 +18,12 @@ export interface NetraGovernmentIds {
   voterId: string;
   phone: string;
   email: string;
+
   bank: ReturnType<typeof generateBankDetails>;
+
   upi: string;
   vehicleRegistration: string;
+
   address: ReturnType<typeof generateAddress>;
 }
 
@@ -42,17 +46,50 @@ export function generateGovernmentIds(
   const vehicleRng = createRNG(`${normalized}:vehicle`);
   const addressRng = createRNG(`${normalized}:address`);
 
-  const phone = generatePhoneNumber(stateId, phoneRng);
+  const phone = generatePhoneNumber(
+    stateId,
+    phoneRng,
+  );
 
   return {
-    aadhaar: generateAadhaar(aadhaarRng),
-    pan: generatePAN(lastName, panRng),
-    voterId: generateVoterID(stateId, voterRng),
+    aadhaar: generateAadhaar(
+      aadhaarRng,
+    ),
+
+    pan: generatePAN(
+      lastName,
+      panRng,
+    ),
+
+    voterId: generateVoterID(
+      stateId,
+      voterRng,
+    ),
+
     phone,
-    email: generateEmail(firstName, lastName, emailRng),
-    bank: generateBankDetails(bankRng),
-    upi: generateUPI(phone, firstName, upiRng),
-    vehicleRegistration: generateVehicleRegistration(stateId, vehicleRng),
+
+    email: generateEmail(
+      firstName,
+      lastName,
+      emailRng,
+    ),
+
+    bank: generateBankDetails(
+      bankRng,
+    ),
+
+    upi: generateUPI(
+      phone,
+      firstName,
+      upiRng,
+    ),
+
+    vehicleRegistration:
+      generateVehicleRegistration(
+        stateId,
+        vehicleRng,
+      ),
+
     address: generateAddress(district, 'urban', addressRng),
   };
-}
+} 
