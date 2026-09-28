@@ -4,6 +4,8 @@ import {
   generateAadhaar,
   generatePAN,
   generateVoterID,
+  generateDrivingLicense,
+  generatePassport,
   generatePhoneNumber,
   generateEmail,
   generateBankDetails,
@@ -16,6 +18,8 @@ export interface NetraGovernmentIds {
   aadhaar: string;
   pan: string;
   voterId: string;
+  drivingLicense: string;
+  passport: string;
   phone: string;
   email: string;
 
@@ -39,6 +43,8 @@ export function generateGovernmentIds(
   const aadhaarRng = createRNG(`${normalized}:aadhaar`);
   const panRng = createRNG(`${normalized}:pan`);
   const voterRng = createRNG(`${normalized}:voter`);
+  const drivingLicenseRng = createRNG(`${normalized}:driving-license`);
+  const passportRng = createRNG(`${normalized}:passport`);
   const phoneRng = createRNG(`${normalized}:phone`);
   const emailRng = createRNG(`${normalized}:email`);
   const bankRng = createRNG(`${normalized}:bank`);
@@ -65,6 +71,9 @@ export function generateGovernmentIds(
       stateId,
       voterRng,
     ),
+
+    drivingLicense: generateDrivingLicense(stateId, drivingLicenseRng),
+    passport: generatePassport(passportRng),
 
     phone,
 
