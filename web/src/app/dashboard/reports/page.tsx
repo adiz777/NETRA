@@ -2,6 +2,7 @@
 
 import NetraSidebar from "@/components/NetraSidebar";
 import { FormEvent, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 type Identity = {
   netraId: string;
@@ -85,6 +86,7 @@ type GeneratedReport = {
 };
 
 export default function ReportsPage() {
+  const searchParams = useSearchParams();
   const [identityId, setIdentityId] = useState("");
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [cases, setCases] = useState<CaseRecord[]>([]);
@@ -96,7 +98,11 @@ export default function ReportsPage() {
 
   useEffect(() => {
     void loadCases();
-  }, []);
+    const requestedCaseId = searchParams.get("caseId");
+    const requestedIdentityId = searchParams.get("identity");
+    if (requestedCaseId) setCaseId(requestedCaseId);
+    if (requestedIdentityId) setIdentityId(requestedIdentityId);
+  }, [searchParams]);
 
   async function loadCases() {
     try {
