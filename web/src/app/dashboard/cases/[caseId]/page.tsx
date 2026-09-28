@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import NetraSidebar from "@/components/NetraSidebar";
 import { FormEvent, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
@@ -191,7 +192,7 @@ export default function CaseDetailPage() {
     return (
       <main className="min-h-screen bg-[#050709] text-slate-300">
         <div className="flex min-h-screen">
-          <Sidebar />
+          <NetraSidebar />
 
           <div className="flex-1 p-8">
             <Link
@@ -221,7 +222,7 @@ export default function CaseDetailPage() {
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(0,255,200,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,200,0.018)_1px,transparent_1px)] bg-[size:32px_32px]" />
 
       <div className="relative flex min-h-screen">
-        <Sidebar />
+        <NetraSidebar />
 
         <div className="min-w-0 flex-1">
           <header className="border-b border-white/10 bg-[#070a0e]/95 px-5 py-5 backdrop-blur md:px-8">
