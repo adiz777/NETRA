@@ -42,6 +42,8 @@ function buildGovernmentIds(profile: DemographicProfile): NetraGovernmentIds {
     aadhaar: profile.aadhaarNumber,
     pan: profile.panNumber,
     voterId: profile.voterIdNumber,
+    drivingLicense: profile.drivingLicenseNumber,
+    passport: profile.passportNumber,
     phone: profile.phoneNumber,
     email: profile.email,
 
