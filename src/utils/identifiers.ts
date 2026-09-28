@@ -332,23 +332,43 @@ export function generateWeight(
   areaType: 'urban' | 'rural',
   rng: SeededRNG
 ): number {
-  // Target BMI distribution (Indian average: ~22-23)
-  let bmiMean = areaType === 'urban' ? 23.5 : 21.5;
-  const bmiStddev = 3.5;
-  
-  // Children have lower BMI
-  if (age < 18) {
-    bmiMean = 16 + age * 0.3;
+  // Use age-specific BMI distributions rather than adult BMI rules.
+  // Height and weight remain correlated while children retain natural variation.
+  let bmiMean: number;
+  let bmiStddev: number;
+  let minBmi: number;
+  let maxBmi: number;
+
+  if (age < 5) {
+    bmiMean = 15.8;
+    bmiStddev = 1.5;
+    minBmi = 12.5;
+    maxBmi = 19.5;
+  } else if (age < 13) {
+    bmiMean = 15.6 + (age - 5) * 0.18;
+    bmiStddev = 1.7;
+    minBmi = 12.5;
+    maxBmi = 21.5;
+  } else if (age < 18) {
+    bmiMean = gender === 'female' ? 18.2 : 18.0;
+    bmiStddev = 2.4;
+    minBmi = 14;
+    maxBmi = 25;
+  } else {
+    bmiMean = areaType === 'urban' ? 23.5 : 21.5;
+    bmiStddev = 3.5;
+    if (age > 65) bmiMean -= 1;
+    minBmi = 14;
+    maxBmi = 40;
   }
-  // Elderly have slightly lower BMI
-  if (age > 65) {
-    bmiMean -= 1;
-  }
-  
-  const bmi = Math.max(14, Math.min(40, gaussianSample(bmiMean, bmiStddev, rng)));
+
+  const bmi = Math.max(
+    minBmi,
+    Math.min(maxBmi, gaussianSample(bmiMean, bmiStddev, rng))
+  );
   const heightM = heightCm / 100;
   const weight = bmi * heightM * heightM;
-  
+
   return Math.round(weight * 10) / 10;
 }
 
