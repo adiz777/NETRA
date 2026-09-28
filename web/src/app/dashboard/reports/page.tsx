@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import NetraSidebar from "@/components/NetraSidebar";
 import { useEffect, useState } from "react";
 
 type Identity = {
@@ -128,7 +129,7 @@ export default function ReportsPage() {
   return (
     <main className="min-h-screen bg-[#05070a] text-slate-200">
       <div className="flex min-h-screen">
-        <Sidebar />
+        <NetraSidebar />
 
         <section className="min-w-0 flex-1">
           <header className="border-b border-white/10 bg-[#070a0f] px-6 py-5">
