@@ -39,6 +39,8 @@ import {
   generateAadhaar,
   generatePAN,
   generateVoterID,
+  generateDrivingLicense,
+  generatePassport,
   generatePhoneNumber,
   generateEmail,
   generateDOB,
@@ -350,6 +352,15 @@ function generateSingleProfile(
   // derived from that id, which lets their keys sit in place below
   // instead of at the end of the profile.
   const profileId = generateUUID(rng);
+
+  const documentRng = createRNG(`v211:documents:${profileId}`);
+  const drivingLicenseNumber = socio.age >= 18
+    ? generateDrivingLicense(stateCode, documentRng)
+    : '';
+  const passportNumber = socio.age >= 18
+    ? generatePassport(documentRng)
+    : '';
+
   const featRng = createRNG(`v209:${profileId}`);
   const geoRng = createRNG(`v210:geo:${profileId}`);
   const geo = generateGeo(path.stateId, path.areaType, geoRng);
@@ -399,6 +410,8 @@ function generateSingleProfile(
     aadhaarNumber,
     panNumber,
     voterIdNumber,
+    drivingLicenseNumber,
+    passportNumber,
     phoneNumber,
     email,
 
