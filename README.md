@@ -166,7 +166,7 @@ Evidence and investigative notes can be attached to individual cases.
 
 This provides a foundation for organising intelligence collected during an investigation without mixing case information directly into the generated identity engine.
 
-The current implementation uses server-side runtime storage. Persistent production storage can be introduced independently of the deterministic identity generator.
+Case information is stored through the server-side local data store. Identity generation remains deterministic and independent of case storage.
 
 ---
 
