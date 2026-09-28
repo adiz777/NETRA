@@ -269,6 +269,13 @@ export default function CaseDetailPage() {
                 >
                   NETWORK
                 </Link>
+
+                <Link
+                  href={"/dashboard/reports?caseId=" + encodeURIComponent(netraCase.caseId)}
+                  className="border border-white/10 bg-white/[0.02] px-4 py-2 font-mono text-[9px] tracking-[0.18em] text-slate-500 transition hover:border-cyan-400/30 hover:text-cyan-300"
+                >
+                  REPORT
+                </Link>
               </div>
             </div>
           </header>
