@@ -477,3 +477,29 @@ https://github.com/adiz777/NETRA
 > **IDENTITY. INTELLIGENCE. NETWORK.**
 >
 > **CLASSIFIED SYSTEM // INTERNAL USE**
+
+
+---
+
+## CLOUD AI & PUBLIC INTELLIGENCE
+
+The authenticated web dashboard includes a hosted AI analyst and public-source lookup workspace. See [Cloud Intelligence deployment notes](docs/CLOUD_INTELLIGENCE.md).
+
+Configure server-side deployment secrets (never commit real keys):
+
+```env
+NETRA_LLM_API_KEY=
+NETRA_LLM_MODEL=
+NETRA_LLM_BASE_URL=https://api.groq.com/openai/v1
+NETRA_LLM_PROVIDER=groq
+```
+
+The LLM endpoint uses an OpenAI-compatible chat-completions API. The base URL and model can be changed to another compatible hosted provider. No local LLM is required or used. Free-tier availability, model access, quotas and terms depend on the selected provider.
+
+New web routes:
+- `GET /api/analysis` — hosted AI configuration status.
+- `POST /api/analysis` — case summary, timeline review, relationship explanation or report draft.
+- `GET /api/intelligence` — list public-source connectors.
+- `POST /api/intelligence` — URLhaus URL check, Open-Meteo geocoding/weather, or Hacker News topic search.
+
+The dashboard page is `/dashboard/intelligence`. AI output and public API responses are contextual aids, not verified evidence. Avoid submitting sensitive personal data to external AI providers. Existing case storage currently uses filesystem APIs and requires a durable Cloudflare-compatible store before production reliance on case/evidence persistence.
