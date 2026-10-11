@@ -10,6 +10,7 @@ const items = [
   { href: "/dashboard/reports", label: "REPORTS", icon: "04" },
   { href: "/dashboard/archive", label: "ARCHIVE", icon: "05" },
   { href: "/dashboard/security", label: "SECURITY", icon: "06" },
+  { href: "/dashboard/intelligence", label: "AI & INTELLIGENCE", icon: "07" },
 ];
 
 export default function NetraSidebar() {
