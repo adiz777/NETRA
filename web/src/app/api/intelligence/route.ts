@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
-
 const jsonHeaders = { "Cache-Control": "no-store" };
 
 function text(value: unknown, max = 300): string {
