@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
-
 const MAX_CONTEXT_LENGTH = 12_000;
 const TASKS = new Set(["summary", "timeline", "relationships", "report"]);
 
