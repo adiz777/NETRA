@@ -9,5 +9,12 @@
   ],
   "assets": {
     "binding": "ASSETS"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "netra-db",
+      "database_id": "461acc60-4585-4d06-8038-f61cbdeea3a7"
+    }
+  ]
 }

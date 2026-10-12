@@ -1,37 +1,84 @@
+
 import "server-only";
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import { env } from "cloudflare:workers";
 import type { NetraCase } from "netra";
 
-const filePath = path.join(process.cwd(), "data", "cases.json");
+type CaseRow = { payload_json: string };
 
-async function readCases(): Promise<NetraCase[]> {
-  try {
-    return JSON.parse(await fs.readFile(filePath, "utf8")) as NetraCase[];
-  } catch {
-    return [];
-  }
+function asRecord(value: NetraCase): Record<string, unknown> {
+  return value as unknown as Record<string, unknown>;
 }
 
-async function writeCases(cases: NetraCase[]) {
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-  await fs.writeFile(filePath, JSON.stringify(cases, null, 2), "utf8");
+function textField(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim()
+    ? value
+    : fallback;
 }
 
-export async function listCases() {
-  return readCases();
+export async function listCases(): Promise<NetraCase[]> {
+  const result = await env.DB.prepare(
+    "SELECT payload_json FROM cases ORDER BY updated_at DESC",
+  ).all<CaseRow>();
+
+  return (result.results ?? []).map(
+    (row) => JSON.parse(row.payload_json) as NetraCase,
+  );
 }
 
-export async function getCase(caseId: string) {
-  const cases = await readCases();
-  return cases.find((item) => item.caseId === caseId) ?? null;
+export async function getCase(
+  caseId: string,
+): Promise<NetraCase | null> {
+  const row = await env.DB.prepare(
+    "SELECT payload_json FROM cases WHERE case_id = ?",
+  ).bind(caseId).first<CaseRow>();
+
+  return row
+    ? JSON.parse(row.payload_json) as NetraCase
+    : null;
 }
 
-export async function saveCase(netraCase: NetraCase) {
-  const cases = await readCases();
-  const index = cases.findIndex((item) => item.caseId === netraCase.caseId);
-  if (index === -1) cases.push(netraCase);
-  else cases[index] = netraCase;
-  await writeCases(cases);
+export async function saveCase(
+  netraCase: NetraCase,
+): Promise<NetraCase> {
+  const value = asRecord(netraCase);
+  const now = new Date().toISOString();
+  const caseId = textField(value.caseId, "");
+
+  if (!caseId) throw new Error("CASE ID REQUIRED");
+
+  const existing = await env.DB.prepare(
+    "SELECT created_at FROM cases WHERE case_id = ?",
+  ).bind(caseId).first<{ created_at: string }>();
+
+  const createdAt = textField(
+    value.createdAt ?? value.created_at,
+    existing?.created_at ?? now,
+  );
+  const updatedAt = textField(
+    value.updatedAt ?? value.updated_at,
+    now,
+  );
+
+  await env.DB.prepare(`
+    INSERT INTO cases (
+      case_id, title, status, priority,
+      payload_json, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(case_id) DO UPDATE SET
+      title = excluded.title,
+      status = excluded.status,
+      priority = excluded.priority,
+      payload_json = excluded.payload_json,
+      updated_at = excluded.updated_at
+  `).bind(
+    caseId,
+    textField(value.title, "Untitled case"),
+    textField(value.status, "OPEN"),
+    textField(value.priority, "MEDIUM"),
+    JSON.stringify(netraCase),
+    createdAt,
+    updatedAt,
+  ).run();
+
   return netraCase;
 }
