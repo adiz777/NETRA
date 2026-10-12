@@ -1,54 +1,74 @@
-# NETRA Cloud Intelligence
+# NETRA Cloud Intelligence and Deployment
 
-This feature adds a hosted LLM analysis endpoint, case evidence workspace, and public-source lookup integrations to NETRA's existing web application. It does not run a local model and does not alter deterministic identity generation.
+This feature adds a hosted LLM analysis endpoint, case evidence workspace, and public-source lookup integrations. It does not run a local model and does not alter deterministic identity generation.
+
+## Fix: AUTHENTICATION SERVICE NOT CONFIGURED
+
+This message means the deployed login API cannot find one or more required server-side settings. It is not fixed by entering credentials into the login form. NETRA deliberately does not ship with a default username or password.
+
+Required settings:
+- `NETRA_USERNAME` — your chosen operator ID.
+- `NETRA_PASSWORD` — a long, unique password.
+- `NETRA_SESSION_SECRET` — a random secret used to sign session cookies.
+
+### Cloudflare Workers setup
+
+From the `web` directory, with Wrangler authenticated to the Cloudflare account that hosts NETRA, run these commands one at a time. Wrangler prompts for each value; enter it at the prompt and do not paste secrets into GitHub, chat, or source files.
+
+```bash
+npx wrangler secret put NETRA_USERNAME
+npx wrangler secret put NETRA_PASSWORD
+npx wrangler secret put NETRA_SESSION_SECRET
+```
+
+Generate a strong session secret locally if OpenSSL is installed:
+
+```bash
+openssl rand -base64 48
+```
+
+Use that output as the value for `NETRA_SESSION_SECRET`. After setting all three secrets, redeploy the Worker from the `web` directory:
+
+```bash
+npx wrangler deploy
+```
+
+If the site is deployed through another platform, add the same three values as server-side environment variables/secrets in that platform and redeploy. Never use `NEXT_PUBLIC_` names for these values. Do not commit a populated `.env.local`.
+
+The login API now returns the names of missing settings (never their values), which should make this configuration problem easier to diagnose.
 
 ## Hosted LLM configuration
 
-Configure these as **server-side deployment secrets/environment variables** in the web host (for Cloudflare Workers, use the Worker's secrets/variables configuration):
-
-- `NETRA_LLM_API_KEY` — secret API key for an OpenAI-compatible chat-completions provider.
+Configure these as server-side deployment secrets/environment variables:
+- `NETRA_LLM_API_KEY` — API key for an OpenAI-compatible chat-completions provider.
 - `NETRA_LLM_MODEL` — exact model identifier enabled for your account.
-- `NETRA_LLM_BASE_URL` — optional API base URL. Defaults to `https://api.groq.com/openai/v1`.
+- `NETRA_LLM_BASE_URL` — optional API base URL; defaults to `https://api.groq.com/openai/v1`.
 - `NETRA_LLM_PROVIDER` — optional display label, e.g. `groq` or `openrouter`.
 
-Example local development values belong in an ignored `.env.local`, never in committed source:
-
-```env
-NETRA_LLM_API_KEY=replace_with_your_key
-NETRA_LLM_MODEL=replace_with_a_model_available_to_your_account
-NETRA_LLM_BASE_URL=https://api.groq.com/openai/v1
-NETRA_LLM_PROVIDER=groq
-```
-
-The application calls `POST {NETRA_LLM_BASE_URL}/chat/completions` from the server-side route. The UI only calls NETRA's own API, so the provider key is never sent to the browser. The default URL is a provider endpoint, not a guarantee of a permanent free quota; models, quotas and terms can change. Select a model currently available on your chosen provider. OpenRouter or another OpenAI-compatible provider can be used by setting the base URL, key and model.
-
-No local LLM fallback is included. If hosted AI is not configured, the existing app remains usable and the AI panel explains that deployment secrets are required.
+Set hosted AI secrets using the provider dashboard or Wrangler secret commands. Provider free quotas, model access, and terms can change. No local LLM is used.
 
 ## Public-source integrations
 
-- **URLhaus**: checks one submitted HTTP(S) URL against the abuse.ch URLhaus feed. A miss is not a safety verdict.
-- **Open-Meteo Geocoding**: returns candidate coordinates for a place name.
-- **Open-Meteo Weather**: retrieves current conditions for coordinates supplied by the user or selected from geocoding.
-- **Hacker News Search API**: searches public technology stories; this is not a general news-verification service.
+- **URLhaus** checks a submitted HTTP(S) URL against the URLhaus feed. A miss is not a safety verdict.
+- **Open-Meteo Geocoding** returns candidate coordinates for a place name.
+- **Open-Meteo Weather** retrieves current conditions for supplied or selected coordinates.
+- **Hacker News Search API** searches public technology stories; it is not a general news-verification service.
 
-These connectors use server-side requests and return source names, timestamps and caveats. Check provider terms, rate limits and suitability before production use. Do not treat external responses as proof of identity, location, activity or wrongdoing.
+These sources are contextual aids, not proof of identity, location, activity, or wrongdoing.
 
 ## Routes
 
-- `GET /api/analysis` — reports whether hosted AI is configured (never returns the API key).
-- `POST /api/analysis` — accepts `{ "task": "summary|timeline|relationships|report", "context": "..." }`.
-- `GET /api/intelligence` — lists connectors.
-- `POST /api/intelligence` — accepts `action: urlhaus|geocode|weather|news` with the corresponding input fields.
-
-Both routes are protected by the existing authentication proxy.
+- `GET /api/analysis` reports whether hosted AI is configured (never returns the API key).
+- `POST /api/analysis` accepts `{ "task": "summary|timeline|relationships|report", "context": "..." }`.
+- `GET /api/intelligence` lists public-source connectors.
+- `POST /api/intelligence` accepts `action: urlhaus|geocode|weather|news`.
 
 ## Deployment and storage caveat
 
-The current case store uses Node filesystem APIs. That is not persistent storage for a Cloudflare Workers deployment. The evidence workspace uses the existing case API and therefore inherits its storage behavior; use a durable Cloudflare D1/KV/R2-backed case store before relying on evidence persistence in production. This feature does not silently claim to solve that pre-existing storage issue.
+The current case store uses Node filesystem APIs. That is not persistent storage for Cloudflare Workers. The evidence workspace uses the existing case API and inherits its storage behavior; migrate case/evidence storage to Cloudflare D1 or another durable store before relying on persistence in production.
 
 ## Privacy and reliability
 
-- Never place provider keys in client-side variables or committed files.
-- Avoid submitting passwords, government identifiers, financial account data or unnecessary personal data to external LLMs.
-- AI output is marked as generated and requires human review.
-- Analysis is grounded only in the case context supplied to the model; external facts are not automatically verified.
+- Never commit provider keys, passwords, or session secrets.
+- Avoid submitting passwords, government identifiers, financial account data, or unnecessary personal data to external LLMs.
+- AI output requires human review and does not independently verify external facts.
