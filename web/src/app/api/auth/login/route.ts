@@ -9,11 +9,23 @@ export async function POST(request: Request) {
     const password = String(body.password ?? "");
     const expectedUsername = process.env.NETRA_USERNAME;
     const expectedPassword = process.env.NETRA_PASSWORD;
+    const requiredSettings = [
+      ["NETRA_USERNAME", expectedUsername],
+      ["NETRA_PASSWORD", expectedPassword],
+      ["NETRA_SESSION_SECRET", process.env.NETRA_SESSION_SECRET],
+    ] as const;
+    const missingSettings = requiredSettings
+      .filter(([, value]) => !value)
+      .map(([name]) => name);
 
-    if (!expectedUsername || !expectedPassword || !process.env.NETRA_SESSION_SECRET) {
+    if (missingSettings.length > 0) {
       return NextResponse.json(
-        { error: "AUTHENTICATION SERVICE NOT CONFIGURED" },
-        { status: 500 },
+        {
+          error: "AUTHENTICATION SERVICE NOT CONFIGURED",
+          detail: "Set the missing server-side deployment secrets, then redeploy.",
+          missingSettings,
+        },
+        { status: 503, headers: { "Cache-Control": "no-store" } },
       );
     }
 
