@@ -8,6 +8,8 @@
 - `POST /api/ai`: hosted analysis through OpenRouter; model is configurable.
 - `POST /api/export`: JSON export.
 - Dashboard page at `/dashboard/intelligence` combines lookups, AI analysis and export.
+- `/dashboard/attack-surface` builds a passive relationship graph from the existing domain lookup: root domain, certificate-transparency names, and IPv4 DNS A answers. It supports node inspection and JSON export; it does not scan ports or prove that certificate-listed hosts are live.
+- `/dashboard/data-quality` sends structured record fields to the existing AI endpoint for a context-aware consistency review. It treats unusual values as review candidates rather than impossible facts and asks for education-system context when labels such as `middle` are ambiguous.
 
 ## Worker secrets
 
