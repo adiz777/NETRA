@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { COOKIE_NAME, verifySession } from "@/lib/auth";
 
 export default async function DashboardLayout({
   children,
@@ -7,9 +8,9 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const session = cookieStore.get("netra_session")?.value;
+  const token = cookieStore.get(COOKIE_NAME)?.value;
 
-  if (session !== "authenticated") {
+  if (!verifySession(token)) {
     redirect("/login");
   }
 

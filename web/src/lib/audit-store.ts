@@ -1,6 +1,6 @@
+
 import "server-only";
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import { env } from "cloudflare:workers";
 
 export type AuditStatus = "SUCCESS" | "DENIED" | "SYSTEM";
 
@@ -14,40 +14,66 @@ export type AuditEvent = {
   source: string;
 };
 
-const filePath = path.join(process.cwd(), "data", "audit.json");
+type AuditRow = {
+  event_id: string;
+  actor: string;
+  action: string;
+  target: string;
+  status: string;
+  source: string;
+  created_at: string;
+};
 
-async function readAudit(): Promise<AuditEvent[]> {
-  try {
-    const value = JSON.parse(await fs.readFile(filePath, "utf8"));
-    return Array.isArray(value) ? value : [];
-  } catch {
-    return [];
-  }
+function mapEvent(row: AuditRow): AuditEvent {
+  return {
+    id: row.event_id,
+    timestamp: row.created_at,
+    action: row.action,
+    actor: row.actor,
+    target: row.target,
+    status: row.status as AuditStatus,
+    source: row.source,
+  };
 }
 
-async function writeAudit(events: AuditEvent[]) {
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-  await fs.writeFile(filePath, JSON.stringify(events.slice(0, 500), null, 2), "utf8");
-}
+export async function listAudit(): Promise<AuditEvent[]> {
+  const result = await env.DB.prepare(`
+    SELECT event_id, actor, action, target, status, source, created_at
+    FROM audit_events
+    ORDER BY created_at DESC
+    LIMIT 500
+  `).all<AuditRow>();
 
-export async function listAudit() {
-  return readAudit();
+  return (result.results ?? []).map(mapEvent);
 }
 
 export async function recordAudit(
   event: Omit<AuditEvent, "id" | "timestamp">,
-) {
+): Promise<AuditEvent> {
   const next: AuditEvent = {
     ...event,
     id: "AUD-" + crypto.randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase(),
     timestamp: new Date().toISOString(),
   };
-  const current = await readAudit();
-  await writeAudit([next, ...current]);
+
+  await env.DB.prepare(`
+    INSERT INTO audit_events (
+      event_id, actor, action, target, status, source, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+  `).bind(
+    next.id,
+    next.actor,
+    next.action,
+    next.target,
+    next.status,
+    next.source,
+    next.timestamp,
+  ).run();
+
   return next;
 }
 
-export async function resetAudit(actor = "OPERATOR") {
+export async function resetAudit(actor = "OPERATOR"): Promise<AuditEvent> {
   const event = await recordAudit({
     action: "AUDIT LOG RESET",
     actor,
@@ -55,6 +81,10 @@ export async function resetAudit(actor = "OPERATOR") {
     status: "SUCCESS",
     source: "SECURITY",
   });
-  await writeAudit([event]);
+
+  await env.DB.prepare(`
+    DELETE FROM audit_events WHERE event_id != ?
+  `).bind(event.id).run();
+
   return event;
 }
