@@ -2,23 +2,18 @@
 
 This feature adds a hosted LLM analysis endpoint, case evidence workspace, and public-source lookup integrations. It does not run a local model and does not alter deterministic identity generation.
 
-## Fix: AUTHENTICATION SERVICE NOT CONFIGURED
+## Authentication: one operator account
 
-This message means the deployed login API cannot find one or more required server-side settings. It is not fixed by entering credentials into the login form. NETRA deliberately does not ship with a default username or password.
+NETRA supports one configured operator login through server-side environment variables. It deliberately has no hard-coded default credentials.
 
-Required settings:
-- `NETRA_USERNAME` — your chosen operator ID.
-- `NETRA_PASSWORD` — a long, unique password.
-- `NETRA_SESSION_SECRET` — a random secret used to sign session cookies.
+### Local development
 
-### Cloudflare Workers setup
+Create `web/.env.local` on your own computer (do not commit it). Add the following keys with your chosen credentials and a unique session secret:
 
-From the `web` directory, with Wrangler authenticated to the Cloudflare account that hosts NETRA, run these commands one at a time. Wrangler prompts for each value; enter it at the prompt and do not paste secrets into GitHub, chat, or source files.
-
-```bash
-npx wrangler secret put NETRA_USERNAME
-npx wrangler secret put NETRA_PASSWORD
-npx wrangler secret put NETRA_SESSION_SECRET
+```env
+NETRA_USERNAME=your_operator_id
+NETRA_PASSWORD=your_long_unique_password
+NETRA_SESSION_SECRET=your_random_secret
 ```
 
 Generate a strong session secret locally if OpenSSL is installed:
@@ -27,15 +22,29 @@ Generate a strong session secret locally if OpenSSL is installed:
 openssl rand -base64 48
 ```
 
-Use that output as the value for `NETRA_SESSION_SECRET`. After setting all three secrets, redeploy the Worker from the `web` directory:
+Restart the development server after changing environment variables. The repository's `.gitignore` excludes local environment files. The committed `web/.env.example` is a template only and must never contain real secrets.
+
+### Cloudflare Workers deployment
+
+A local `.env.local` file on your computer is not automatically available to a deployed Worker. Configure the same three values as Worker secrets from the `web` directory, while authenticated to the Cloudflare account that hosts NETRA:
+
+```bash
+npx wrangler secret put NETRA_USERNAME
+npx wrangler secret put NETRA_PASSWORD
+npx wrangler secret put NETRA_SESSION_SECRET
+```
+
+Wrangler prompts for each value. Enter your chosen operator ID, password, and generated session secret at the prompts. Do not paste them into source code, GitHub, chat, or a committed file. After all three secrets are configured, redeploy the Worker:
 
 ```bash
 npx wrangler deploy
 ```
 
-If the site is deployed through another platform, add the same three values as server-side environment variables/secrets in that platform and redeploy. Never use `NEXT_PUBLIC_` names for these values. Do not commit a populated `.env.local`.
+If NETRA is hosted somewhere other than Cloudflare, configure these as server-side environment variables/secrets in that host and redeploy. Never use `NEXT_PUBLIC_` names for authentication settings.
 
-The login API now returns the names of missing settings (never their values), which should make this configuration problem easier to diagnose.
+If the login API returns `AUTHENTICATION SERVICE NOT CONFIGURED`, it includes the names of missing settings only, never their values.
+
+**Security note:** use a long, unique password before exposing the site publicly. Treat a password shared in chat as exposed and change it before production.
 
 ## Hosted LLM configuration
 
