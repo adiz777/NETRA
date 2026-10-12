@@ -7,6 +7,7 @@ const items = [
   { href: "/dashboard", label: "IDENTITIES", icon: "01" },
   { href: "/dashboard/cases", label: "CASES", icon: "02" },
   { href: "/dashboard/intelligence", label: "INTELLIGENCE", icon: "07" },
+  { href: "/dashboard/attack-surface", label: "ATTACK SURFACE", icon: "08" },
   { href: "/dashboard/network", label: "NETWORK", icon: "03" },
   { href: "/dashboard/reports", label: "REPORTS", icon: "04" },
   { href: "/dashboard/archive", label: "ARCHIVE", icon: "05" },
