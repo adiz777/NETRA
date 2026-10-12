@@ -71,24 +71,24 @@ export default function AttackSurfacePage() {
       { id: "root", label: root, kind: "domain", x: 500, y: 92, detail: "Root domain supplied for this passive lookup." },
     ];
     subdomains.forEach((name, index) => {
-      const count = Math.max(subdomains.length, 1);
+      const column = index % 4;
+      const row = Math.floor(index / 4);
       output.push({
         id: "sub-" + name,
         label: name,
         kind: "subdomain",
-        x: 500 + (index - (count - 1) / 2) * Math.min(660 / count, 115),
-        y: 280,
+        x: 140 + column * 240,
+        y: 220 + row * 88,
         detail: "Observed in certificate-transparency data. This does not prove the host is currently live.",
       });
     });
     ips.forEach((ip, index) => {
-      const count = Math.max(ips.length, 1);
       output.push({
         id: "ip-" + ip,
         label: ip,
         kind: "ip",
-        x: 500 + (index - (count - 1) / 2) * Math.min(660 / count, 115),
-        y: 470,
+        x: 100 + index * 160,
+        y: 500,
         detail: "Returned by the public DNS lookup for the root domain.",
       });
     });
