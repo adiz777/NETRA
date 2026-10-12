@@ -8,6 +8,7 @@ const items = [
   { href: "/dashboard/cases", label: "CASES", icon: "02" },
   { href: "/dashboard/intelligence", label: "INTELLIGENCE", icon: "07" },
   { href: "/dashboard/attack-surface", label: "ATTACK SURFACE", icon: "08" },
+  { href: "/dashboard/data-quality", label: "DATA QUALITY AI", icon: "09" },
   { href: "/dashboard/network", label: "NETWORK", icon: "03" },
   { href: "/dashboard/reports", label: "REPORTS", icon: "04" },
   { href: "/dashboard/archive", label: "ARCHIVE", icon: "05" },
