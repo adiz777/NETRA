@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-void: #070A0F;
+    --bg-surface: #0D121D;
+    --bg-surface-elevated: #151C2C;
+    --border-grid: #1E293B;
+    --accent-cyan: #00F0FF;
+    --accent-emerald: #10B981;
+    --accent-amber: #F59E0B;
+    --accent-crimson: #EF4444;
+  }
+
+  body {
+    background-color: #070A0F;
+    color: #E2E8F0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Custom dark tactical scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #070A0F;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1E293B;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00F0FF44;
+  }
+}
+
+/* Tactical Background Grid Pattern */
+.tactical-grid-bg {
+  background-color: #070A0F;
+  background-image: 
+    linear-gradient(rgba(30, 41, 59, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 41, 59, 0.25) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+
+.tactical-dot-grid {
+  background-image: radial-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glassmorphic Tactical Panels */
+.glass-panel {
+  background: rgba(13, 18, 29, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+.glass-panel-elevated {
+  background: rgba(21, 28, 44, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.glass-panel-hover {
+  transition: all 0.2s ease-in-out;
+}
+.glass-panel-hover:hover {
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.1);
+}
+
+/* Tactical Glow Utilities */
+.glow-cyan {
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
+
+.glow-cyan-sm {
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.25);
+}
+
+.glow-amber {
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+}
+
+.glow-crimson {
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Tactical Corner Accents */
+.tactical-corners {
+  position: relative;
+}
+.tactical-corners::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #00F0FF;
+  border-left: 2px solid #00F0FF;
+  pointer-events: none;
+}
+.tactical-corners::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid #00F0FF;
+  border-right: 2px solid #00F0FF;
+  pointer-events: none;
+}
+
+/* Monospace Tactical Text */
+.font-tactical-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  letter-spacing: -0.02em;
+}
+
+/* Pulse indicator animation */
+@keyframes tactical-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.15);
+  }
+}
+
+.animate-tactical-pulse {
+  animation: tactical-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Print styles for Executive Intelligence Briefing */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .glass-panel, .glass-panel-elevated {
+    background: #FFFFFF !important;
+    border: 1px solid #CCCCCC !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+}
