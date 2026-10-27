@@ -8,7 +8,7 @@
     {
       "binding": "DB",
       "database_name": "netra-db",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "461acc60-4585-4d06-8038-f61cbdeea3a7",
       "migrations_dir": "migrations"
     }
   ],
@@ -24,10 +24,7 @@
   "routes": [
     {
       "pattern": "netra.adizala.me/*",
-      "custom_domain": {
-        "zone_name": "adizala.me",
-        "zone_id": "b3b307b47aa2ab554e7814dcce47edc7"
-      }
+      "zone_name": "adizala.me"
     }
   ]
 }
