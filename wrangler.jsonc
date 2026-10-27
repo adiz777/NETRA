@@ -20,5 +20,14 @@
   "vars": {
     "JWT_SECRET": "netra-super-secret-jwt-key-change-in-production-2026",
     "ENVIRONMENT": "production"
-  }
+  },
+  "routes": [
+    {
+      "pattern": "netra.adizala.me/*",
+      "custom_domain": {
+        "zone_name": "adizala.me",
+        "zone_id": "b3b307b47aa2ab554e7814dcce47edc7"
+      }
+    }
+  ]
 }
