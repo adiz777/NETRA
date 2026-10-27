@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Production builds
+dist/
+.wrangler/
+
+# Test artifacts & cache
+coverage/
+.vitest/
+
+# Local environment variables
+.env
+.env.local
+.env.*.local
+.dev.vars
+
+# Operating system metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

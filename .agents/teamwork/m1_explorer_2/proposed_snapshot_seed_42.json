@@ -1,0 +1,477 @@
+{
+  "meta": {
+    "id": "dos_bc4d27f3f26d9622",
+    "seed": "seed-42",
+    "version": "1.0.0",
+    "classification": "SECRET",
+    "status": "ACTIVE",
+    "threatScore": 74,
+    "generatedAt": "2026-10-27T00:00:00.000Z"
+  },
+  "personal": {
+    "firstName": "Morgan",
+    "middleName": "Emily",
+    "lastName": "Vance",
+    "legalFullName": "Morgan Emily Vance",
+    "aliases": [
+      "MVance",
+      "Vance0x",
+      "Ghost10"
+    ],
+    "dateOfBirth": "1985-11-25",
+    "age": 41,
+    "gender": "female",
+    "sex": "F",
+    "nationality": "US",
+    "citizenship": [
+      "US"
+    ],
+    "placeOfBirth": {
+      "city": "Arlington",
+      "stateProvince": "VA",
+      "country": "US"
+    },
+    "ethnicity": "US Heritage",
+    "languages": [
+      {
+        "language": "English",
+        "proficiency": "native"
+      },
+      {
+        "language": "English",
+        "proficiency": "native"
+      }
+    ],
+    "maritalStatus": "divorced",
+    "bloodType": "B-"
+  },
+  "physical": {
+    "heightCm": 165,
+    "weightKg": 54,
+    "eyeColor": "green",
+    "hairColor": "black",
+    "hairStyle": "buzz cut",
+    "skinTone": "Fair, Fitzpatrick Type II",
+    "facialHair": "none",
+    "distinguishingFeatures": [
+      {
+        "type": "birthmark",
+        "location": "neck",
+        "description": "faint pigmented mark"
+      }
+    ],
+    "biometricFingerprintHash": "8e1af028ce45f9dc046c69d7f81d4394b6077eabc837799993ae095a397f7f0c",
+    "correctiveLenses": "glasses"
+  },
+  "addresses": {
+    "current": {
+      "addressLine1": "3242 Constitution Ave",
+      "city": "Reston",
+      "stateProvince": "VA",
+      "postalCode": "20190",
+      "country": "US",
+      "coordinates": {
+        "latitude": 38.9691,
+        "longitude": -77.3345
+      },
+      "domicileType": "rented",
+      "residenceSince": "2021-09-15"
+    },
+    "previous": [
+      {
+        "addressLine1": "6379 Elmwood Terrace",
+        "city": "Arlington",
+        "stateProvince": "VA",
+        "postalCode": "22201",
+        "country": "US",
+        "coordinates": {
+          "latitude": 38.8587,
+          "longitude": -77.0698
+        },
+        "domicileType": "rented",
+        "residenceSince": "2003-09-01"
+      }
+    ]
+  },
+  "communications": {
+    "phoneNumbers": [
+      {
+        "type": "mobile",
+        "number": "+1-202-555-0611",
+        "carrier": "AT&T Mobility",
+        "imsi": "973432341459025",
+        "imei": "346304028866556",
+        "status": "active"
+      }
+    ],
+    "emailAddresses": [
+      {
+        "type": "work",
+        "email": "morgan.vance@netra-intel.internal",
+        "domain": "netra-intel.internal",
+        "primary": true,
+        "pgpKeyFingerprint": "ADB1 08D3 292E 18B7 8BAC DF6E B636 8BDE",
+        "compromisedInBreach": true
+      },
+      {
+        "type": "personal",
+        "email": "morgan54@threat-mail.mock",
+        "domain": "threat-mail.mock",
+        "primary": false,
+        "compromisedInBreach": false
+      }
+    ],
+    "secureMessaging": [
+      {
+        "platform": "signal",
+        "handle": "++1675934994",
+        "registeredPhoneOrId": "usr_3586347e",
+        "lastActive": "2026-10-26T21:15:00Z"
+      }
+    ]
+  },
+  "governmentIds": {
+    "nationalId": {
+      "type": "SSN",
+      "number": "938-50-3205",
+      "issuingCountry": "US"
+    },
+    "passports": [
+      {
+        "passportNumber": "P00978412",
+        "issuingCountry": "US",
+        "issueDate": "2023-04-12",
+        "expiryDate": "2033-04-11",
+        "status": "valid",
+        "visas": [
+          {
+            "country": "CH",
+            "type": "Business / Schengen",
+            "validUntil": "2026-12-31"
+          }
+        ]
+      }
+    ],
+    "driversLicense": {
+      "licenseNumber": "VA-D711-613-136",
+      "issuingState": "VA",
+      "issuingCountry": "US",
+      "class": "Standard",
+      "expiryDate": "2028-11-25",
+      "endorsements": [
+        "Motorcycle"
+      ]
+    },
+    "taxIdentifier": {
+      "tin": "31-4506564",
+      "jurisdiction": "US-IRS"
+    }
+  },
+  "careerAndEducation": {
+    "current": {
+      "employer": "Blackwood Intelligence",
+      "jobTitle": "Lead Threat Intelligence Engineer",
+      "department": "Cyber Defense Operations",
+      "industry": "Defense Contracting",
+      "annualSalaryUsd": 236824,
+      "clearanceLevel": "secret"
+    },
+    "employmentHistory": [
+      {
+        "employer": "Sentrix Security",
+        "jobTitle": "Senior Security Analyst",
+        "startDate": "2008-07-01",
+        "endDate": "2023-05-30",
+        "reasonForLeaving": "Career advancement"
+      }
+    ],
+    "education": [
+      {
+        "institution": "Arlington Technical University",
+        "degree": "Bachelor of Science",
+        "fieldOfStudy": "Computer Science & Cryptography",
+        "graduationYear": 2007
+      }
+    ],
+    "certifications": [
+      {
+        "name": "CISSP",
+        "issuingBody": "(ISC)²",
+        "issueYear": 2010,
+        "credentialId": "CERT-488700"
+      }
+    ]
+  },
+  "financial": {
+    "creditScore": 658,
+    "creditRating": "fair",
+    "estimatedNetWorthUsd": 807350,
+    "annualGrossIncomeUsd": 236824,
+    "taxComplianceStatus": "compliant",
+    "bankAccounts": [
+      {
+        "institution": "Reston Commercial Bank",
+        "accountType": "checking",
+        "accountNumberMasked": "******6825",
+        "routingOrSwift": "SWIFT532702",
+        "currency": "USD",
+        "balanceBracket": "$25,000 - $75,000"
+      }
+    ],
+    "cryptoWallets": [
+      {
+        "network": "monero",
+        "address": "47bafc70f19dcb8bc5a6c50b9b105fe3dcf105e99",
+        "label": "Private Escrow",
+        "balanceEstimate": "6 XMR",
+        "riskFlags": [
+          "mixer_associated",
+          "high_anonymity"
+        ]
+      },
+      {
+        "network": "bitcoin",
+        "address": "bc1q59929b916abbc6890ab3929c37f35e08b30c6b",
+        "label": "Cold Storage",
+        "balanceEstimate": "0.52 BTC",
+        "riskFlags": []
+      }
+    ],
+    "suspiciousIndicators": []
+  },
+  "digitalFootprint": {
+    "socialProfiles": [
+      {
+        "platform": "github",
+        "handle": "morgan-vance",
+        "url": "https://github.mock/morgan-vance",
+        "accountAgeYears": 10,
+        "followersCount": 481,
+        "bio": "Security Researcher | Distributed Systems & FFI"
+      },
+      {
+        "platform": "twitter_x",
+        "handle": "@Vance0x",
+        "url": "https://x.mock/Vance0x",
+        "accountAgeYears": 2,
+        "followersCount": 2921,
+        "bio": "OSINT practitioner. Views my own."
+      }
+    ],
+    "digitalFingerprint": {
+      "primaryIpAddress": "198.51.100.104",
+      "ipGeolocation": {
+        "city": "Reston",
+        "country": "US",
+        "isp": "Reston Telecom AS7823",
+        "asn": "AS31346"
+      },
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "preferredTimezone": "America/New_York"
+    },
+    "knownBreaches": [
+      {
+        "breachName": "ExploitIn Combolist",
+        "year": 2021,
+        "leakedDataTypes": [
+          "email",
+          "password_hash"
+        ]
+      }
+    ]
+  },
+  "assets": {
+    "vehicles": [
+      {
+        "make": "Toyota",
+        "model": "XC60",
+        "year": 2021,
+        "color": "Obsidian Black",
+        "vin": "1HGFD20177484F47C",
+        "licensePlate": "7AF-4851",
+        "registrationStateCountry": "VA-US",
+        "status": "registered"
+      }
+    ],
+    "realEstate": [
+      {
+        "propertyType": "commercial",
+        "address": "3242 Constitution Ave, Reston, VA",
+        "estimatedValueUsd": 763058,
+        "ownershipType": "llc_trust"
+      }
+    ],
+    "corporateAffiliations": [
+      {
+        "companyName": "Vance Intelligence Advisory LLC",
+        "registrationNumber": "LLC-3069457",
+        "jurisdiction": "VA",
+        "role": "director",
+        "isShellCompanyCandidate": true
+      }
+    ]
+  },
+  "networkGraph": {
+    "nodes": [
+      {
+        "id": "dos_bc4d27f3f26d9622",
+        "label": "Morgan Emily Vance",
+        "category": "person",
+        "role": "Subject of Investigation",
+        "isSubject": true,
+        "riskScore": 74
+      },
+      {
+        "id": "node_018c27fa",
+        "label": "James Vance",
+        "category": "person",
+        "role": "Associate / Kin",
+        "isSubject": false,
+        "riskScore": 36
+      },
+      {
+        "id": "node_e3d0acaf",
+        "label": "Jessica Callahan",
+        "category": "person",
+        "role": "Senior Co-Worker",
+        "isSubject": false,
+        "riskScore": 40
+      },
+      {
+        "id": "node_4a7d9d55",
+        "label": "Vance Intelligence Advisory LLC",
+        "category": "shell_company",
+        "role": "Corporate Entity",
+        "isSubject": false,
+        "riskScore": 78
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_496a3c",
+        "source": "dos_bc4d27f3f26d9622",
+        "target": "node_018c27fa",
+        "type": "family",
+        "weight": 0.85,
+        "status": "active",
+        "firstObserved": "2003-01-01",
+        "notes": "Immediate familial relationship"
+      },
+      {
+        "id": "edge_9a8487",
+        "source": "dos_bc4d27f3f26d9622",
+        "target": "node_e3d0acaf",
+        "type": "co_worker",
+        "weight": 0.65,
+        "status": "active",
+        "firstObserved": "2023-06-01",
+        "notes": "Direct professional collaborator at current employer"
+      },
+      {
+        "id": "edge_21f861",
+        "source": "dos_bc4d27f3f26d9622",
+        "target": "node_4a7d9d55",
+        "type": "shell_entity_owner",
+        "weight": 0.95,
+        "status": "active",
+        "firstObserved": "2022-03-15",
+        "notes": "Sole beneficial ownership and director registration"
+      }
+    ]
+  },
+  "timeline": {
+    "events": [
+      {
+        "id": "evt_01_596ad4",
+        "timestamp": "1985-11-25T08:30:00.000Z",
+        "category": "birth",
+        "title": "Birth of Subject",
+        "description": "Subject born in Arlington, VA, US",
+        "severity": "routine",
+        "location": "Arlington, US",
+        "tags": [
+          "vital_records",
+          "civil_registry"
+        ]
+      },
+      {
+        "id": "evt_02_e842dd",
+        "timestamp": "2003-06-15T14:00:00.000Z",
+        "category": "education",
+        "title": "Secondary Education Completed",
+        "description": "Graduated from secondary school in Arlington",
+        "severity": "routine",
+        "location": "Arlington, US",
+        "tags": [
+          "education",
+          "diploma"
+        ]
+      },
+      {
+        "id": "evt_03_97d8b0",
+        "timestamp": "2007-06-20T10:00:00.000Z",
+        "category": "education",
+        "title": "Bachelor's Degree Conferred",
+        "description": "Bachelor of Science in Computer Science & Cryptography from Arlington Technical University",
+        "severity": "routine",
+        "location": "Arlington, US",
+        "tags": [
+          "education",
+          "degree"
+        ]
+      },
+      {
+        "id": "evt_04_359e45",
+        "timestamp": "2008-07-01T09:00:00.000Z",
+        "category": "career",
+        "title": "First Professional Appointment",
+        "description": "Appointed as Senior Security Analyst at Sentrix Security",
+        "severity": "routine",
+        "location": "Reston, US",
+        "tags": [
+          "employment",
+          "career_start"
+        ]
+      },
+      {
+        "id": "evt_06_e6c06f",
+        "timestamp": "2021-09-15T12:00:00.000Z",
+        "category": "residence",
+        "title": "Relocation to Current Residence",
+        "description": "Established residence at 3242 Constitution Ave, Reston",
+        "severity": "routine",
+        "location": "Reston, US",
+        "tags": [
+          "address",
+          "residency"
+        ]
+      },
+      {
+        "id": "evt_05_aa86e1",
+        "timestamp": "2023-04-12T11:00:00.000Z",
+        "category": "travel",
+        "title": "Biometric Passport Issued",
+        "description": "National passport P00978412 issued by government authorities",
+        "severity": "routine",
+        "location": "US",
+        "tags": [
+          "passport",
+          "travel_docs"
+        ]
+      },
+      {
+        "id": "evt_07_d21742",
+        "timestamp": "2026-08-14T19:42:00.000Z",
+        "category": "intelligence_flag",
+        "title": "Flagged Financial Transaction",
+        "description": "Suspicious cross-border transaction registered on monitored node",
+        "severity": "critical",
+        "location": "Reston, US",
+        "tags": [
+          "audit",
+          "intelligence"
+        ]
+      }
+    ]
+  }
+}

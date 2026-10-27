@@ -1,0 +1,55 @@
+{
+  "name": "netra",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"cyan,magenta\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "wrangler dev --port 8787",
+    "dev:client": "vite --port 5173",
+    "build": "npm run build:client",
+    "build:client": "vite build",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "vitest run tests/e2e",
+    "test:deploy": "tsx scripts/verify-deployment.ts",
+    "db:migrate:local": "wrangler d1 migrations apply netra-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply netra-db --remote",
+    "db:seed": "tsx scripts/seed-local-db.ts",
+    "lint": "tsc --noEmit",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "^4.6.14",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261023.1",
+    "@cloudflare/wrangler": "^1.21.0",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "better-sqlite3": "^13.0.3",
+    "clsx": "^2.1.1",
+    "concurrently": "^9.1.0",
+    "postcss": "^8.4.49",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vitest": "^3.0.5",
+    "wrangler": "^4.153.0"
+  }
+}
